@@ -1,4 +1,14 @@
 .App {
   text-align: center;
   justify-content: center;
+  width: 430px;
+  max-width: 100%;
+  height: 932px;
+  padding: 0 20px;
+  margin: 0 auto;
+
+  @media (max-width: 430px) {
+    width: 100%;
+    height: auto;
+  }
 }
