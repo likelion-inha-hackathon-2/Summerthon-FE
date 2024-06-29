@@ -6,7 +6,7 @@ import Typo from "../components/Typo/Typo";
 import Button from "../components/Button/Button";
 import { ImageTaxi } from "../assets/image";
 
-const StartPage = () => {
+const Home = () => {
   return (
     <Container>
       <Flex direction="column" justify="center" align="center">
@@ -19,4 +19,4 @@ const StartPage = () => {
   );
 };
 
-export default StartPage;
+export default Home;
