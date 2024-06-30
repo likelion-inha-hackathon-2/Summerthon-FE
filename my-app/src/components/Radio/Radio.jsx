@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// 전체 컨테이너
 const RadioWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -11,7 +10,6 @@ const RadioWrapper = styled.div`
   gap: 20px;
 `;
 
-// 레이블
 const Label = styled.label`
   font-size: 16px;
   margin: 10px;
@@ -19,7 +17,6 @@ const Label = styled.label`
   flex: 1;
 `;
 
-// 라디오 버튼 Wrapper
 const RadioButtonGroup = styled.div`
   display: flex;
   flex-direction: row;
@@ -28,12 +25,11 @@ const RadioButtonGroup = styled.div`
   flex: 1;
 `;
 
-// 라디오 버튼
 const RadioButton = styled.input`
   display: inline-block;
 `;
 
-const Radio = ({ label, options, value, onChange }) => {
+const Radio = ({ label, name, options, value, onChange }) => {
   return (
     <RadioWrapper>
       {label && <Label>{label}</Label>}
@@ -42,10 +38,12 @@ const Radio = ({ label, options, value, onChange }) => {
           <label key={index}>
             <RadioButton
               type="radio"
-              name={label}
+              name={name}
               value={option.value}
               checked={value === option.value}
-              onChange={onChange}
+              onChange={(e) =>
+                onChange({ target: { name, value: e.target.value } })
+              }
             />
             {option.label}
           </label>
