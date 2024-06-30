@@ -5,15 +5,26 @@ import Image from "../components/Image/Image";
 import Typo from "../components/Typo/Typo";
 import Button from "../components/Button/Button";
 import { ImageTaxi } from "../assets/image";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const goToLoginPage = () => {
+    navigate("/login");
+  };
+
   return (
     <Container>
       <Flex direction="column" justify="center" align="center">
         <Image src={ImageTaxi} width={"309px"} height={"228px"} />
-        <Typo text="택시 서비스" fontSize="28px" fontWeight="bold"/>
-        <Typo text="아래 버튼을 눌러 시작하세요!" fontSize="18px" color="gray" />
-        <Button text="시작하기" fontSize="20px" />
+        <Typo text="택시 서비스" fontSize="28px" fontWeight="bold" />
+        <Typo
+          text="아래 버튼을 눌러 시작하세요!"
+          fontSize="18px"
+          color="gray"
+        />
+        <Button text="시작하기" fontSize="20px" onClick={goToLoginPage} />
       </Flex>
     </Container>
   );
