@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Typo from "../components/Typo/Typo";
@@ -6,7 +7,6 @@ import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import Radio from "../components/Radio/Radio";
 import useForm from "../hooks/useForm";
-import { useNavigate } from "react-router-dom";
 
 const SignUpFirst = () => {
   const { values, handleChange } = useForm({
@@ -15,23 +15,24 @@ const SignUpFirst = () => {
     name: "",
     gender: "",
     phone: "",
-    age: "",
+    age: 1,
   });
 
   const genders = [
-    { value: "male", label: "남자" },
-    { value: "female", label: "여자" },
+    { value: "Male", label: "남자" },
+    { value: "Female", label: "여자" },
   ];
 
-  const ages = Array.from({ length: 100 }, (v, k) => ({
-    value: k + 1,
-    label: k + 1,
+  const ages = Array.from({ length: 100 }, (_, k) => ({
+    value: String(k + 1),
+    label: String(k + 1),
   }));
 
   const navigate = useNavigate();
 
   const goToSecondPage = () => {
-    navigate("/signup/2");
+    console.log("First page data:", values);
+    navigate("/signup/2", { state: values });
   };
 
   return (
@@ -71,7 +72,7 @@ const SignUpFirst = () => {
           label="연락처"
           name="phone"
           placeholder="ex) 010-1234-5678"
-          value={values.contact}
+          value={values.phone}
           onChange={handleChange}
         />
         <Input
