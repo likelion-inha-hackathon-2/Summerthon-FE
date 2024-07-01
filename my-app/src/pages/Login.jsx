@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "../components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -80,6 +81,12 @@ const SignupText = styled.div`
 `;
 
 function Login() {
+  const navigate = useNavigate();
+
+  const goToMainPage = () => {
+    navigate("/main");
+  };
+
   return (
     <LoginContainer>
       <Title>로그인</Title>
@@ -91,7 +98,7 @@ function Login() {
         <label htmlFor="pw">비밀번호</label>
         <input type="password" id="pw" placeholder="비밀번호를 입력하세요" />
       </LoginForm>
-      <LoginButton text="로그인"></LoginButton>
+      <LoginButton text="로그인" onClick={goToMainPage}></LoginButton>
       <SignupText>
         회원이 아니신가요?
         <a href="/signup/1">회원가입</a>
