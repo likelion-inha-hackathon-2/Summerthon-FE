@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import SignUpFirst from "./pages/SignUpFirst";
 import SignUpSecond from "./pages/SignUpSecond";
 import Main from "./pages/Main";
+import Call from "./pages/Call";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup/1" element={<SignUpFirst />} />
         <Route path="/signup/2" element={<SignUpSecond />} />
         <Route path="/main" element={<Main />} />
+        <Route path="/call" element={<Call />} />
       </Routes>
     </BrowserRouter>
   );

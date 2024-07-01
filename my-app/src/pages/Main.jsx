@@ -4,6 +4,7 @@ import Flex from "../components/Flex/Flex";
 import Image from "../components/Image/Image";
 import Typo from "../components/Typo/Typo";
 import { ButtonCall, ButtonEmer, ButtonScan } from "../assets/image";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
   const Alert = () => {
@@ -11,6 +12,16 @@ const Main = () => {
     // 각 호출 페이지로 navigate되도록 수정 필요
   };
 
+  const navigate = useNavigate();
+
+  // 일반 호출
+  const goToCallPage = () => {
+    navigate("/call");
+  };
+
+  // QR 스캔 호출
+
+  // 긴급 호출
 
   return (
     <Container>
@@ -48,7 +59,7 @@ const Main = () => {
           align="center"
           style={{ margin: "20px" }}
         >
-          <Image src={ButtonCall} onClick={Alert} />
+          <Image src={ButtonCall} onClick={goToCallPage} />
           <Image src={ButtonScan} onClick={Alert} />
         </Flex>
         <Typo
