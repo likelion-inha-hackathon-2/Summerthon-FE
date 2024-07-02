@@ -32,7 +32,7 @@ const StyledButton = styled.button`
   font-size: ${(props) => props.fontSize || "24px"};
   width: ${(props) => props.width || "360px"};
   height: ${(props) => props.height || "54px"};
-  background-color: ${(props) => props.backgroundColor || "#007bff"};
+  background-color: ${(props) => props.backgroundColor || "#0d99ff;"};
   color: ${(props) => props.color || "white"};
   border: none;
   border-radius: 15px;
