@@ -1,109 +1,78 @@
 import React from "react";
-import styled from "styled-components";
+import Container from "../components/Container/Container";
+import Flex from "../components/Flex/Flex";
+import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
-import { useNavigate } from "react-router-dom";
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  background-color: #fff;
-  border: 3px solid #e6e6e6;
-  border-radius: 10px;
-  width: 430px;
-  max-width: 100%;
-  height: 932px;
-  padding: 0 20px;
-  margin: 0 auto;
-`;
-
-const Title = styled.h1`
-  position: relative;
-  bottom: 100px;
-  margin-bottom: 40px;
-  font-size: 34px;
-  font-weight: bold;
-`;
-
-const LoginForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-  width: 100%;
-  max-width: 300px;
-  label {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-  input {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #e6e6e6;
-  }
-`;
-
-const LoginButton = styled(Button)`
-  width: 100%;
-  position: relative;
-  background-color: #0d99ff;
-  padding: 10px 0;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  max-width: 300px;
-  margin-top: 20px;
-  &:hover {
-    background-color: #007acc;
-  }
-`;
-
-const SignupText = styled.div`
-  margin-top: 10px;
-  font-size: 14px;
-  color: black;
-
-  a {
-    color: #0d99ff;
-    text-decoration: none;
-    margin-left: 5px;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-`;
+import axiosInstance from "../apis/axiosInstance";
+import useForm from "../hooks/useForm";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
+  const { values, handleChange } = useForm({
+    user_login_id: "",
+    user_pwd: "",
+  });
+
   const navigate = useNavigate();
 
-  const goToMainPage = () => {
-    navigate("/main");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.post("/login", {
+        user_login_id: values.user_login_id,
+        user_pwd: values.user_pwd,
+      });
+      console.log(response.data);
+      if (response.data && response.data.status === "200") {
+        localStorage.setItem("accessToken", response.data.access_token);
+        localStorage.setItem("refreshToken", response.data.refresh_token);
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.data.access_token}`;
+        navigate("/main");
+      } else {
+        alert(response.data.message || "로그인에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error.response) {
+        alert(error.response.data.message || "로그인에 실패했습니다.");
+      } else if (error.request) {
+        alert("서버와의 통신에 실패했습니다. 네트워크 연결을 확인해주세요.");
+      } else {
+        alert("로그인 처리 중 오류가 발생했습니다.");
+      }
+    }
   };
 
   return (
-    <LoginContainer>
-      <Title>로그인</Title>
-      <LoginForm>
-        <label htmlFor="id">아이디</label>
-        <input type="text" id="id" placeholder="아이디를 입력하세요" />
-      </LoginForm>
-      <LoginForm>
-        <label htmlFor="pw">비밀번호</label>
-        <input type="password" id="pw" placeholder="비밀번호를 입력하세요" />
-      </LoginForm>
-      <LoginButton text="로그인" onClick={goToMainPage}></LoginButton>
-      <SignupText>
-        회원이 아니신가요?
-        <a href="/signup/1">회원가입</a>
-      </SignupText>
-    </LoginContainer>
+    <Container>
+      <Flex direction="column" justify="center" align="center">
+        <h1>로그인</h1>
+        <form onSubmit={handleLogin}>
+          <Input
+            label="아이디"
+            type="text"
+            name="user_login_id"
+            value={values.user_login_id}
+            onChange={handleChange}
+            placeholder="아이디를 입력하세요"
+          />
+          <Input
+            label="비밀번호"
+            type="password"
+            name="user_pwd"
+            value={values.user_pwd}
+            onChange={handleChange}
+            placeholder="비밀번호를 입력하세요"
+          />
+          <Button text="로그인" type="submit" />
+        </form>
+        <div>
+          회원이 아니신가요? <Link to="/signup/1">회원가입</Link>
+        </div>
+      </Flex>
+    </Container>
   );
 };
 
