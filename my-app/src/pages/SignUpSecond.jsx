@@ -7,7 +7,7 @@ import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import useForm from "../hooks/useForm";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../apis/axiosInstance";
+import authApi from "../apis/authApi";
 
 const SignUpSecond = () => {
   const location = useLocation();
@@ -62,9 +62,9 @@ const SignUpSecond = () => {
     };
 
     try {
-      const response = await axiosInstance.post("/signup", finalData);
+      const response = await authApi.post("/signup", finalData);
       console.log(finalData);
-      if (response.data && response.data.success) {
+      if (response.data && response.data.status === "201") {
         alert("회원가입이 완료되었습니다.");
         navigate("/login");
       } else {

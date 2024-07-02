@@ -3,7 +3,7 @@ import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
-import axiosInstance from "../apis/axiosInstance";
+import authApi from "../apis/authApi";
 import useForm from "../hooks/useForm";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -18,7 +18,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/login", {
+      const response = await authApi.post("/login", {
         user_login_id: values.user_login_id,
         user_pwd: values.user_pwd,
       });
@@ -26,7 +26,7 @@ const Login = () => {
       if (response.data && response.data.status === "200") {
         localStorage.setItem("accessToken", response.data.access_token);
         localStorage.setItem("refreshToken", response.data.refresh_token);
-        axiosInstance.defaults.headers.common[
+        authApi.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${response.data.access_token}`;
         navigate("/main");
