@@ -5,6 +5,7 @@ import Image from "../components/Image/Image";
 import Typo from "../components/Typo/Typo";
 import { ButtonCall, ButtonEmer, ButtonScan } from "../assets/image";
 import { useNavigate } from "react-router-dom";
+import Header2 from "../components/Header/Header2";
 
 const Main = () => {
   const Alert = () => {
@@ -25,6 +26,7 @@ const Main = () => {
 
   return (
     <Container>
+      <Header2/>
       <Flex>
         <Flex align="flex-start">
           <Typo
