@@ -5,7 +5,6 @@ import IconArrow from "../assets/icons/arrow.png";
 
 const Header = styled.div`
     display: flex;
-
     width: 380px;
     height: 30px;
     padding: 17px 24px;
@@ -16,18 +15,8 @@ const Header = styled.div`
     background: #0d99ff;
     border-bottom: 1px solid #dee5ed;
     margin-bottom: 93px;
-    top: 0;
     position: fixed;
-`;
-
-const MyInfo = styled.span`
-    color: #fff;
-    font-family: Inter;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 150%; /* 36px */
-    letter-spacing: -0.456px;
+    top: 0;
 `;
 
 const ImageContainer = styled.div`
@@ -35,24 +24,16 @@ const ImageContainer = styled.div`
     align-items: center;
 `;
 
-const TextContainer = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
-const HeaderComponent = () => {
+const HeaderComponentS = () => {
     return (
         <>
             <Header>
                 <ImageContainer>
                     <Image src={IconArrow} width={"31.85px"} height={"22.72px"} />
                 </ImageContainer>
-                <TextContainer>
-                    <MyInfo>내 정보</MyInfo>
-                </TextContainer>
             </Header>
         </>
     );
 };
 
-export default HeaderComponent;
+export default HeaderComponentS;
