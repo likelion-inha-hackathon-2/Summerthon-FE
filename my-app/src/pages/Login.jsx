@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "../components/Button/Button";
+import useForm from "../hooks/useForm";
+
 
 const LoginContainer = styled.div`
   display: flex;
@@ -46,6 +48,7 @@ const LoginForm = styled.div`
   }
 `;
 
+
 const LoginButton = styled(Button)`
   width: 100%;
   position: relative;
@@ -80,16 +83,31 @@ const SignupText = styled.div`
 `;
 
 function Login() {
+  const { values, handleChange } = useForm({
+    userid: "",
+    password: "",
+  });
+
   return (
     <LoginContainer>
       <Title>로그인</Title>
       <LoginForm>
-        <label htmlFor="id">아이디</label>
-        <input type="text" id="id" placeholder="아이디를 입력하세요" />
+        <label htmlFor="userid">아이디</label>
+        <input 
+        type="text" 
+        id="userid" 
+        placeholder="아이디를 입력하세요" 
+        value={values.username}
+        onChange={handleChange}/>
       </LoginForm>
       <LoginForm>
         <label htmlFor="pw">비밀번호</label>
-        <input type="password" id="pw" placeholder="비밀번호를 입력하세요" />
+        <input 
+        type="password" 
+        id="password" 
+        placeholder="비밀번호를 입력하세요"
+        value={values.username}
+        onChange={handleChange}/>
       </LoginForm>
       <LoginButton text="로그인"></LoginButton>
       <SignupText>
