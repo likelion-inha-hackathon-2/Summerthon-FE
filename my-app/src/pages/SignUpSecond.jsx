@@ -6,12 +6,17 @@ import Typo from "../components/Typo/Typo";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import useForm from "../hooks/useForm";
+import { useNavigate } from "react-router-dom";
 
 const SignUpSecond = () => {
   const location = useLocation();
   const firstPageValues = location.state || {};
 
-  const { values: formValues, handleChange, setValue } = useForm({
+  const {
+    values: formValues,
+    handleChange,
+    setValue,
+  } = useForm({
     protector: "",
     protector_name: "",
     address_name: "",
@@ -31,6 +36,8 @@ const SignUpSecond = () => {
     setValue("address_name", value);
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = () => {
     const finalData = {
       ...firstPageValues,
@@ -39,6 +46,8 @@ const SignUpSecond = () => {
     };
     console.log("Final signup data:", finalData);
     alert("회원가입 완료");
+    // 로그인 페이지 /login로 이동
+    navigate("/login");
   };
 
   const openAddressPopup = () => {
@@ -77,8 +86,8 @@ const SignUpSecond = () => {
           value={formValues.address_name}
           onChange={handleAddressNameChange}
         />
-        <Flex direction="row" align="left" >
-        <Typo text="도로명 주소" fontSize="16px" />
+        <Flex direction="row" align="left">
+          <Typo text="도로명 주소" fontSize="16px" />
           <Input
             type="text"
             value={roadAddress}
