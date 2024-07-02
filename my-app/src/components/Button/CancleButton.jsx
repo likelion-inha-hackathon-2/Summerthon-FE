@@ -4,11 +4,12 @@ import React from "react";
 import Image from "../Image/Image";
 import { ButtonCancle } from "../../assets/image";
 
-const CancleButton = () => {
+const CancleButton = ({ onClick }) => {
   return (
-    <div>
+    <div onClick={onClick} style={{ cursor: "pointer" }}>
       {/* 지도 */}
-      <Image src={ButtonCancle}></Image>
+      
+      <Image src={ButtonCancle} />
     </div>
   );
 };
