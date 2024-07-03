@@ -1,10 +1,9 @@
 import React from "react";
 import Button from "../Button/Button";
 
-const AddButton = ({ onClick }) => {
-  return (
-    <Button text="추가 등록" fontSize="14px" width="100px" onClick={onClick} />
-  );
+// 버튼 이름 변경할 수 있도록 text props 추가
+const AddButton = ({ onClick, text }) => {
+  return <Button text={text} fontSize="14px" width="120px" onClick={onClick} />;
 };
 
 export default AddButton;
