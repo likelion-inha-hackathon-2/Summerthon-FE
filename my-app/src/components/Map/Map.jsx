@@ -17,17 +17,18 @@ const Map = ({ route }) => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        let mapOptions;
-        const map = new window.kakao.maps.Map(mapContainer.current, {
+        const mapOptions = {
           center: new window.kakao.maps.LatLng(
             37.4482020408321,
             126.651415033662
-          ), // 기본 좌표 인하대로 초기화
+          ), // 인하대 좌표
           level: 5,
-        });
+        };
 
-        if (route) {
-          const { startX, startY, endX, endY } = route;
+        const map = new window.kakao.maps.Map(mapContainer.current, mapOptions);
+
+        if (route && route.polyline) {
+          const { startX, startY, endX, endY, polyline } = route;
 
           // 출발지 표시하는 마커
           const startMarker = new window.kakao.maps.Marker({
@@ -42,12 +43,11 @@ const Map = ({ route }) => {
           });
 
           // 경로 나타내기
-          const linePath = [
-            new window.kakao.maps.LatLng(startY, startX),
-            new window.kakao.maps.LatLng(endY, endX),
-          ];
+          const linePath = polyline.map(
+            (point) => new window.kakao.maps.LatLng(point.y, point.x)
+          );
 
-          const polyline = new window.kakao.maps.Polyline({
+          const polylinePath = new window.kakao.maps.Polyline({
             path: linePath,
             strokeWeight: 5,
             strokeColor: "#FF0000",
@@ -55,7 +55,7 @@ const Map = ({ route }) => {
             strokeStyle: "solid",
           });
 
-          polyline.setMap(map);
+          polylinePath.setMap(map);
 
           const bounds = new window.kakao.maps.LatLngBounds();
           bounds.extend(new window.kakao.maps.LatLng(startY, startX));
