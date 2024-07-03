@@ -6,7 +6,8 @@ import SignUp from "./pages/SignUp"; // 회원가입 1
 import Main from "./pages/Main";
 import Call from "./pages/Call"; // 일반 호출
 import MyInfo from "./pages/MyInfo"; // 내정보
-import ArriveLocation from "./pages/ArriveLocation"; // QR 스캔
+import ArriveLocation from "./pages/ArriveLocation"; // QR 스캔1
+import Scan from "./pages/Scan"; // QR 스캔2
 import EmerCall from "./pages/EmerCall"; // 긴급 호출
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/call" element={<Call />} />
         <Route path="/me" element={<MyInfo />} />
         <Route path="/arrive-location" element={<ArriveLocation />} />
+        <Route path="/scan" element={<Scan />} />
         <Route path="/emercall" element={<EmerCall />} />
       </Routes>
     </BrowserRouter>
