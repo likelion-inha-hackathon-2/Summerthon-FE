@@ -8,4 +8,16 @@ const authApi = axios.create({
   },
 });
 
+// 토큰 인터셉터 요청
+authApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); 
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default authApi;

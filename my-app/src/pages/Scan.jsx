@@ -22,6 +22,7 @@ const Scan = () => {
   const [route, setRoute] = useState(null);
   const [taxi, setTaxi] = useState(null);
   const location = useLocation();
+  const [destinationName, setDestinationName] = useState(""); // 추가된 상태
 
   useEffect(() => {
     if (location.state && location.state.address) {
@@ -37,6 +38,7 @@ const Scan = () => {
         endX: longitude,
         endY: latitude,
       });
+      setDestinationName(address_name); // 주소지 이름 설정
     }
   }, [location.state]);
 
@@ -110,8 +112,20 @@ const Scan = () => {
       <Container>
         <Header1 />
         <Flex direction="column" align="center">
-          <Typo text="현재 위치에서 택시를 호출합니다." fontSize="24px" fontWeight="bold" />
-          
+          <Typo text="현재 위치에서" fontSize="24px" fontWeight="bold" />
+          <Button
+            text={destinationName ? destinationName : "selectedaddress"}
+            width="auto"
+            height="auto"
+            backgroundColor="#0d99ff"
+            hoverBackgroundColor="#007acc"
+          />
+          <Typo
+            text="까지 가는 택시를 호출 중입니다."
+            fontSize="24px"
+            fontWeight="bold"
+            style={{ margin: "0" }}
+          />
           <Input
             label="출발지"
             name="starting_address"
