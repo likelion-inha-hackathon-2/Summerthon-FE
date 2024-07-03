@@ -142,8 +142,8 @@ const Scan = () => {
             onChange={handleChange}
             readOnly
           />
-          <Button text="택시 호출하기" onClick={handleFindRoute} />
-          <Taxi />
+
+          <Taxi onClick={handleFindRoute} />
           <Map route={route} taxi={taxi} />
           <CancleButton onClick={handleCancel} />
         </Flex>

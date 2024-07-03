@@ -1,34 +1,44 @@
-import React, { useEffect, useState } from "react";
-import Typo from "../Typo/Typo";
-import { getTaxiData } from "../../apis/taxiApi";
+import React, { useState } from "react";
+import styled from "styled-components";
+import Button from "../Button/Button";
+import { createTaxi } from "../../apis/taxiApi";
+
+const TaxiContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 20px;
+`;
 
 const Taxi = () => {
-  const [taxiData, setTaxiData] = useState([]);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const fetchTaxiData = async () => {
-      try {
-        const data = await getTaxiData();
-        setTaxiData(data);
-      } catch (error) {
-        console.error("Error fetching taxi data:", error);
-      }
+  const handleCreateTaxi = async () => {
+    const taxiData = {
+      license_number: "",
+      latitude: "5",
+      longitude: "",
+      driver_name: "",
+      driver_phone: "",
+      acceptance: 1, //
     };
-    fetchTaxiData();
-  }, []);
+
+    try {
+      const response = await createTaxi(taxiData);
+      setMessage("택시 정보가 성공적으로 생성되었습니다.");
+      console.log("Created Taxi:", response);
+    } catch (error) {
+      setMessage("택시 정보 생성에 실패했습니다.");
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div>
-      {taxiData.length > 0 ? (
-        taxiData.map((taxi, index) => (
-          <Typo
-            key={index}
-            text={`택시 번호: ${taxi.license_number}, 기사 이름: ${taxi.driver_name}, 기사 전화번호: ${taxi.driver_phone}`}
-          />
-        ))
-      ) : (
-        <Typo text="등록된 택시 정보가 없습니다." />
-      )}
+      <TaxiContainer>
+        <Button text="택시 호출하기" onClick={handleCreateTaxi} />
+        {message && <p>{message}</p>}
+      </TaxiContainer>
     </div>
   );
 };

@@ -11,7 +11,7 @@ import Header1 from "../components/Header/Header1";
 import { getAddressToCoordinate } from "../apis/kakaoApi";
 import { createTaxi } from "../apis/taxiApi";
 import { useLocation } from "react-router-dom";
-import Taxi from "../components/Taxi/Taxi";
+// 이메일 axios 불러오기
 
 const Scan = () => {
   const [values, setValues] = useState({
@@ -123,15 +123,7 @@ const Scan = () => {
             onChange={handleChange}
             readOnly
           />
-          <Input
-            label="도착지"
-            name="destination_address"
-            placeholder="도착지를 입력하세요"
-            value={values.destination_address}
-            onChange={handleChange}
-            readOnly
-          />
-          <Button text="보호자 호출하기" />
+          <Button text="보호자 호출하기(email)" />
           <Map route={route} />
           <CancleButton onClick={handleCancel} />
         </Flex>
