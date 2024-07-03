@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Typo from "../components/Typo/Typo";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import useForm from "../hooks/useForm";
-import { useNavigate } from "react-router-dom";
 import authApi from "../apis/authApi";
 
 const SignUpSecond = () => {
   const location = useLocation();
   const firstPageValues = location.state || {};
+
+  console.log("Received values from first page:", firstPageValues);
 
   const {
     values: formValues,
@@ -19,7 +20,7 @@ const SignUpSecond = () => {
     setValue,
   } = useForm({
     protector_phone: "",
-    protector_name: "",
+    protecter_email: "",
     address_name: "",
     address: "",
     addrDetail: "",
@@ -43,16 +44,16 @@ const SignUpSecond = () => {
   const handleSubmit = async () => {
     const finalData = {
       user: {
-        user_login_id: firstPageValues.username,
-        user_pwd: firstPageValues.password,
-        user_name: firstPageValues.name,
-        user_gender: firstPageValues.gender,
-        user_phone: firstPageValues.phone,
-        user_age: parseInt(firstPageValues.age, 10),
+        user_login_id: firstPageValues.user_login_id,
+        password: firstPageValues.password,
+        user_name: firstPageValues.user_name,
+        user_gender: firstPageValues.user_gender,
+        user_phone: firstPageValues.user_phone,
+        user_age: parseInt(firstPageValues.user_age, 10),
       },
       protector: {
+        protecter_email: formValues.protecter_email,
         protector_name: formValues.protector_name,
-        protector_phone: formValues.protector_phone,
       },
       address: {
         address_name: formValues.address_name,
@@ -61,10 +62,11 @@ const SignUpSecond = () => {
       },
     };
 
+    console.log("Final data to be sent to the server:", finalData);
+
     try {
       const response = await authApi.post("/signup", finalData);
-      console.log(finalData);
-      if (response.data && response.data.status === "201") {
+      if (response.status === 200 || response.status === 201) {
         alert("회원가입이 완료되었습니다.");
         navigate("/login");
       } else {
@@ -74,8 +76,7 @@ const SignUpSecond = () => {
       if (error.response) {
         const responseData = error.response.data;
         if (responseData.message && responseData.message.user) {
-          // 중복 불가 에러 처리
-          setError("이미 존재하는 아이디입니다.");
+          setError("회원가입에 실패했습니다.");
         } else {
           setError("회원가입에 실패했습니다.");
         }
@@ -107,9 +108,9 @@ const SignUpSecond = () => {
         />
         <Input
           label="보호자 연락처"
-          name="protector_phone"
+          name="protector_email"
           placeholder="보호자 연락처를 입력하세요"
-          value={formValues.protector_phone}
+          value={formValues.protector_email}
           onChange={handleChange}
         />
         <Typo text="주소지 등록" fontSize="20px" />

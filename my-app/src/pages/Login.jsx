@@ -6,11 +6,12 @@ import Button from "../components/Button/Button";
 import authApi from "../apis/authApi";
 import useForm from "../hooks/useForm";
 import { useNavigate, Link } from "react-router-dom";
+import Header2 from "../components/Header/Header2";
 
 const Login = () => {
   const { values, handleChange } = useForm({
     user_login_id: "",
-    user_pwd: "",
+    password: "",
   });
 
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Login = () => {
     try {
       const response = await authApi.post("/login", {
         user_login_id: values.user_login_id,
-        user_pwd: values.user_pwd,
+        password: values.password,
       });
       console.log(response.data);
       if (response.data && response.data.status === "200") {
@@ -47,6 +48,7 @@ const Login = () => {
 
   return (
     <Container>
+      <Header2 />
       <Flex direction="column" justify="center" align="center">
         <h1>로그인</h1>
         <form onSubmit={handleLogin}>
@@ -61,15 +63,20 @@ const Login = () => {
           <Input
             label="비밀번호"
             type="password"
-            name="user_pwd"
-            value={values.user_pwd}
+            name="password"
+            value={values.password}
             onChange={handleChange}
             placeholder="비밀번호를 입력하세요"
           />
           <Button text="로그인" type="submit" />
         </form>
         <div>
-          회원이 아니신가요? <Link to="/signup/1">회원가입</Link>
+          회원이 아니신가요?{" "}
+          <Link to="/signup/1">
+            <span style={{ textDecoration: "none", color: "#0d99ff" }}>
+              회원가입
+            </span>
+          </Link>
         </div>
       </Flex>
     </Container>
