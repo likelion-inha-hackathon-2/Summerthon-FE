@@ -8,12 +8,11 @@ import Map from "../components/Map/Map";
 import Button from "../components/Button/Button";
 import Typo from "../components/Typo/Typo";
 import Header1 from "../components/Header/Header1";
-import { getAddressToCoordinate } from "../apis/kakaoApi";
-import { createTaxi } from "../apis/taxiApi";
+import { getAddressToCoordinate, getRoute } from "../apis/kakaoApi";
+import { createTaxi, getNearbyTaxi } from "../apis/taxiApi";
 import { useLocation } from "react-router-dom";
-import Taxi from "../components/Taxi/Taxi";
 
-const Scan = () => {
+const Call = () => {
   const [values, setValues] = useState({
     starting_address: "인천광역시 미추홀구 용현동 292-7", // 고정된 출발지
     destination_address: "",
@@ -25,27 +24,21 @@ const Scan = () => {
 
   useEffect(() => {
     if (location.state && location.state.address) {
-      const { address_name, road_address, latitude, longitude } =
-        location.state.address;
-      setValues({
-        ...values,
+      const { road_address, latitude, longitude } = location.state.address;
+      setValues((prevValues) => ({
+        ...prevValues,
         destination_address: road_address,
-      });
-      setRoute({
-        startX: "126.651415033662", // 고정된 출발지 좌표
-        startY: "37.4482020408321",
-        endX: longitude,
-        endY: latitude,
-      });
+      }));
+      findRoute("126.651415033662", "37.4482020408321", longitude, latitude);
     }
   }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues({
-      ...values,
+    setValues((prevValues) => ({
+      ...prevValues,
       [name]: value,
-    });
+    }));
   };
 
   const handleCancel = () => {
@@ -66,37 +59,72 @@ const Scan = () => {
     setTaxi(null);
   };
 
-  const handleFindRoute = async () => {
+  const findRoute = async (endX, endY) => {
+    const startX = "126.651415033662";
+    const startY = "37.4482020408321";
     try {
-      const startCoords = await getAddressToCoordinate(values.starting_address);
-      const destCoords = await getAddressToCoordinate(
-        values.destination_address
-      );
+      const routeData = await getRoute(startX, startY, endX, endY);
 
       if (
-        !startCoords.documents ||
-        !startCoords.documents[0] ||
-        !destCoords.documents ||
-        !destCoords.documents[0]
+        routeData.routes &&
+        routeData.routes[0] &&
+        routeData.routes[0].sections &&
+        routeData.routes[0].sections[0] &&
+        routeData.routes[0].sections[0].roads
       ) {
-        console.error("Invalid coordinates data", startCoords, destCoords);
+        const polyline = routeData.routes[0].sections[0].roads.flatMap((road) =>
+          road.vertexes.reduce((acc, _, index, array) => {
+            if (index % 2 === 0) {
+              acc.push({ x: array[index], y: array[index + 1] });
+            }
+            return acc;
+          }, [])
+        );
+
+        setRoute({
+          startX,
+          startY,
+          endX,
+          endY,
+          polyline,
+        });
+      } else {
+        console.error("Invalid route data structure", routeData);
+        alert("경로를 찾을 수 없습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("Error finding route:", error);
+      alert("경로를 찾는 도중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleFindRoute = async () => {
+    const { destination_address } = values;
+    if (!destination_address) {
+      alert("도착지를 입력하세요.");
+      return;
+    }
+
+    try {
+      const destCoords = await getAddressToCoordinate(destination_address);
+
+      if (!destCoords.documents || !destCoords.documents[0]) {
+        console.error("Invalid coordinates data", destCoords);
         alert("주소를 다시 확인하세요.");
         return;
       }
 
-      const routeData = {
-        startX: startCoords.documents[0].x,
-        startY: startCoords.documents[0].y,
-        endX: destCoords.documents[0].x,
-        endY: destCoords.documents[0].y,
-      };
-      setRoute(routeData);
+      const { x: endX, y: endY } = destCoords.documents[0];
+
+      findRoute(endX, endY);
 
       const taxiData = {
-        starting_address: values.starting_address,
-        destination_address: values.destination_address,
-        latitude: destCoords.documents[0].y,
-        longitude: destCoords.documents[0].x,
+        license_number: "123-456",
+        latitude: "37.4482020408321",
+        longitude: "126.651415033662",
+        driver_name: "김기사",
+        driver_phone: "010-1234-5678",
+        acceptance: 1,
       };
       const createdTaxi = await createTaxi(taxiData);
       setTaxi(createdTaxi);
@@ -110,8 +138,12 @@ const Scan = () => {
       <Container>
         <Header1 />
         <Flex direction="column" align="center">
-          <Typo text="현재 위치에서 택시를 호출합니다." fontSize="24px" fontWeight="bold" />
-          
+          <Typo
+            text="현재 위치에서 택시를 호출합니다."
+            fontSize="24px"
+            fontWeight="bold"
+          />
+
           <Input
             label="출발지"
             name="starting_address"
@@ -126,11 +158,11 @@ const Scan = () => {
             placeholder="도착지를 입력하세요"
             value={values.destination_address}
             onChange={handleChange}
-            readOnly
           />
+          <Button text="경로 찾기" onClick={handleFindRoute} />
 
-          <Taxi onClick={handleFindRoute} />
-          <Map route={route} taxi={taxi} />
+          {route && <Map route={route} />}
+          {!route && <Map />} {/* 도착지 입력 전 인하대 고정 지도 표시 */}
           <CancleButton onClick={handleCancel} />
         </Flex>
       </Container>
@@ -143,4 +175,4 @@ const Scan = () => {
   );
 };
 
-export default Scan;
+export default Call;
