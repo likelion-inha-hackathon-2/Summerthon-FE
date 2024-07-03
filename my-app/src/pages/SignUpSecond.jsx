@@ -20,7 +20,7 @@ const SignUpSecond = () => {
     setValue,
   } = useForm({
     protector_phone: "",
-    protecter_email: "",
+    protector_email: "",
     address_name: "",
     address: "",
     addrDetail: "",
@@ -52,7 +52,7 @@ const SignUpSecond = () => {
         user_age: parseInt(firstPageValues.user_age, 10),
       },
       protector: {
-        protecter_email: formValues.protecter_email,
+        protector_email: formValues.protector_email,
         protector_name: formValues.protector_name,
       },
       address: {
