@@ -7,6 +7,7 @@ import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import useForm from "../hooks/useForm";
 import { useNavigate } from "react-router-dom";
+import authApi from "../apis/authApi";
 
 const SignUpSecond = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const SignUpSecond = () => {
     handleChange,
     setValue,
   } = useForm({
-    protector: "",
+    protector_phone: "",
     protector_name: "",
     address_name: "",
     address: "",
@@ -25,6 +26,7 @@ const SignUpSecond = () => {
   });
 
   const [roadAddress, setRoadAddress] = useState("");
+  const [error, setError] = useState("");
 
   const handleAddressChange = (data) => {
     setRoadAddress(data.roadAddress);
@@ -38,16 +40,49 @@ const SignUpSecond = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const finalData = {
-      ...firstPageValues,
-      ...formValues,
-      address: `${roadAddress} ${formValues.addrDetail}`,
+      user: {
+        user_login_id: firstPageValues.username,
+        user_pwd: firstPageValues.password,
+        user_name: firstPageValues.name,
+        user_gender: firstPageValues.gender,
+        user_phone: firstPageValues.phone,
+        user_age: parseInt(firstPageValues.age, 10),
+      },
+      protector: {
+        protector_name: formValues.protector_name,
+        protector_phone: formValues.protector_phone,
+      },
+      address: {
+        address_name: formValues.address_name,
+        road_address: roadAddress,
+        detail_address: formValues.addrDetail,
+      },
     };
-    console.log("Final signup data:", finalData);
-    alert("회원가입 완료");
-    // 로그인 페이지 /login로 이동
-    navigate("/login");
+
+    try {
+      const response = await authApi.post("/signup", finalData);
+      console.log(finalData);
+      if (response.data && response.data.status === "201") {
+        alert("회원가입이 완료되었습니다.");
+        navigate("/login");
+      } else {
+        alert("회원가입에 실패했습니다.");
+      }
+    } catch (error) {
+      if (error.response) {
+        const responseData = error.response.data;
+        if (responseData.message && responseData.message.user) {
+          // 중복 불가 에러 처리
+          setError("이미 존재하는 아이디입니다.");
+        } else {
+          setError("회원가입에 실패했습니다.");
+        }
+      } else {
+        setError("서버와의 통신에 실패했습니다. 네트워크 연결을 확인해주세요.");
+      }
+    }
   };
 
   const openAddressPopup = () => {
@@ -64,17 +99,17 @@ const SignUpSecond = () => {
         <Typo text="회원가입 2" fontSize="24px" fontWeight="bold" />
         <Typo text="보호자 등록" fontSize="20px" />
         <Input
-          label="보호자 연락처"
-          name="protector"
-          placeholder="보호자 연락처를 입력하세요"
-          value={formValues.protector}
-          onChange={handleChange}
-        />
-        <Input
           label="보호자 저장 이름"
           name="protector_name"
           placeholder="보호자 저장 이름을 입력하세요"
           value={formValues.protector_name}
+          onChange={handleChange}
+        />
+        <Input
+          label="보호자 연락처"
+          name="protector_phone"
+          placeholder="보호자 연락처를 입력하세요"
+          value={formValues.protector_phone}
           onChange={handleChange}
         />
         <Typo text="주소지 등록" fontSize="20px" />
@@ -108,6 +143,7 @@ const SignUpSecond = () => {
           value={formValues.addrDetail}
           onChange={handleChange}
         />
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <Button
           text="회원가입 완료하기"
           fontSize="20px"

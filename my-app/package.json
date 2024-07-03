@@ -8,11 +8,14 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "buffer": "^6.0.3",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.24.0",
     "react-scripts": "5.0.1",
+    "react-tooltip": "^5.27.0",
     "styled-components": "^6.1.11",
     "web-vitals": "^2.1.4",
     "xml-js": "^1.6.11"
@@ -42,6 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "dotenv-webpack": "^8.1.0"
   }
 }

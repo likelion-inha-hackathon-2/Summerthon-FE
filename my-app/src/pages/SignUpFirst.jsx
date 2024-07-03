@@ -15,12 +15,12 @@ const SignUpFirst = () => {
     name: "",
     gender: "",
     phone: "",
-    age: 1,
+    age: "1",
   });
 
   const genders = [
-    { value: "Male", label: "남자" },
-    { value: "Female", label: "여자" },
+    { value: "M", label: "남자" },
+    { value: "F", label: "여자" },
   ];
 
   const ages = Array.from({ length: 100 }, (_, k) => ({

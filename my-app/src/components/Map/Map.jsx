@@ -1,69 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const StyledMap = styled.div`
-  width: 300px;
+  width: 100%;
   height: 300px;
 `;
 
-const Map = ({ address }) => {
-  const [map, setMap] = useState(null);
+const Map = ({ route }) => {
+  const mapContainer = useRef(null);
 
   useEffect(() => {
-    const loadScript = () => {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAP_API_KEY}&autoload=false&libraries=services`;
-        script.onload = () => resolve();
-        script.onerror = () => reject(new Error("Script load error"));
-        document.head.appendChild(script);
-      });
-    };
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_JAVASCRIPT_KEY}&libraries=services,clusterer,drawing&autoload=false`;
+    document.head.appendChild(script);
 
-    const initMap = () => {
+    script.onload = () => {
       window.kakao.maps.load(() => {
-        const container = document.getElementById("map");
-        const options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-          level: 3,
-        };
-        const newMap = new window.kakao.maps.Map(container, options);
-        setMap(newMap);
-      });
-    };
+        let mapOptions;
+        const map = new window.kakao.maps.Map(mapContainer.current, {
+          center: new window.kakao.maps.LatLng(
+            37.4482020408321,
+            126.651415033662
+          ), // 기본 좌표 인하대로 초기화
+          level: 5,
+        });
 
-    loadScript()
-      .then(() => {
-        window.kakao.maps.load(initMap);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+        if (route) {
+          const { startX, startY, endX, endY } = route;
 
-  useEffect(() => {
-    if (map && address) {
-      const geocoder = new window.kakao.maps.services.Geocoder();
-
-      geocoder.addressSearch(address, (result, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-
-          map.setCenter(coords);
-
-          new window.kakao.maps.Marker({
+          // 출발지 표시하는 마커
+          const startMarker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(startY, startX),
             map: map,
-            position: coords,
           });
+
+          // 도착지 표시하는 마커
+          const endMarker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(endY, endX),
+            map: map,
+          });
+
+          // 경로 나타내기
+          const linePath = [
+            new window.kakao.maps.LatLng(startY, startX),
+            new window.kakao.maps.LatLng(endY, endX),
+          ];
+
+          const polyline = new window.kakao.maps.Polyline({
+            path: linePath,
+            strokeWeight: 5,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1.0,
+            strokeStyle: "solid",
+          });
+
+          polyline.setMap(map);
+
+          const bounds = new window.kakao.maps.LatLngBounds();
+          bounds.extend(new window.kakao.maps.LatLng(startY, startX));
+          bounds.extend(new window.kakao.maps.LatLng(endY, endX));
+          map.setBounds(bounds);
         }
       });
-    }
-  }, [map, address]);
+    };
 
-  return (
-    <StyledMap>
-      <div id="map" style={{ width: "100%", height: "100%" }}></div>
-    </StyledMap>
-  );
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [route]);
+
+  return <StyledMap ref={mapContainer}></StyledMap>;
 };
 
 export default Map;
