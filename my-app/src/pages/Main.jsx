@@ -21,6 +21,9 @@ const Main = () => {
   };
 
   // QR 스캔 호출
+  const goToArriveLocation = () => {
+    navigate("/arrive-location");
+  };
 
   // 긴급 호출
 
@@ -62,7 +65,7 @@ const Main = () => {
           style={{ margin: "20px" }}
         >
           <Image src={ButtonCall} onClick={goToCallPage} />
-          <Image src={ButtonScan} onClick={Alert} />
+          <Image src={ButtonScan} onClick={goToArriveLocation} />
         </Flex>
         <Typo
           text="긴급 호출하기"
