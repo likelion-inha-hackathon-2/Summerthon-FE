@@ -7,6 +7,7 @@ import SignUpSecond from "./pages/SignUpSecond";
 import Main from "./pages/Main";
 import Call from "./pages/Call";
 import MyInfo from "./pages/MyInfo";
+import ArriveLocation from "./pages/ArriveLocation";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/call" element={<Call />} />
         <Route path="/me" element={<MyInfo />} />
+        <Route path="/arrive-location" element={<ArriveLocation />} />
       </Routes>
     </BrowserRouter>
   );
