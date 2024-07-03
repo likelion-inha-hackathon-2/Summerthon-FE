@@ -10,12 +10,12 @@ import useForm from "../hooks/useForm";
 
 const SignUpFirst = () => {
   const { values, handleChange } = useForm({
-    username: "",
+    user_login_id: "",
     password: "",
-    name: "",
-    gender: "",
-    phone: "",
-    age: "1",
+    user_name: "",
+    user_gender: "",
+    user_phone: "",
+    user_age: "1",
   });
 
   const genders = [
@@ -41,9 +41,9 @@ const SignUpFirst = () => {
         <Typo text="회원가입 1" fontSize="24px" fontWeight="bold" />
         <Input
           label="아이디"
-          name="username"
+          name="user_login_id"
           placeholder="아이디를 입력하세요"
-          value={values.username}
+          value={values.user_login_id}
           onChange={handleChange}
         />
         <Input
@@ -56,30 +56,30 @@ const SignUpFirst = () => {
         />
         <Input
           label="이름"
-          name="name"
+          name="user_name"
           placeholder="이름을 입력하세요"
-          value={values.name}
+          value={values.user_name}
           onChange={handleChange}
         />
         <Radio
           label="성별"
-          name="gender"
+          name="user_gender"
           options={genders}
-          value={values.gender}
+          value={values.user_gender}
           onChange={handleChange}
         />
         <Input
           label="연락처"
-          name="phone"
+          name="user_phone"
           placeholder="ex) 010-1234-5678"
-          value={values.phone}
+          value={values.user_phone}
           onChange={handleChange}
         />
         <Input
           type="select"
           label="나이"
-          name="age"
-          value={values.age}
+          name="user_age"
+          value={values.user_age}
           onChange={handleChange}
           options={ages}
         />

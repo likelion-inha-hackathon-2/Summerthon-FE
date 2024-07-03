@@ -1,13 +1,14 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import SignUpFirst from "./pages/SignUpFirst";
-import SignUpSecond from "./pages/SignUpSecond";
+import Home from "./pages/Home"; // 홈(시작)
+import Login from "./pages/Login"; // 로그인
+import SignUpFirst from "./pages/SignUpFirst"; // 회원가입 1
+import SignUpSecond from "./pages/SignUpSecond"; // 회원가입2
 import Main from "./pages/Main";
-import Call from "./pages/Call";
-import MyInfo from "./pages/MyInfo";
-import ArriveLocation from "./pages/ArriveLocation";
+import Call from "./pages/Call"; // 일반 호출
+import MyInfo from "./pages/MyInfo"; // 내정보
+import ArriveLocation from "./pages/ArriveLocation"; // QR 스캔
+import EmerCall from "./pages/EmerCall"; // 긴급 호출
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/call" element={<Call />} />
         <Route path="/me" element={<MyInfo />} />
         <Route path="/arrive-location" element={<ArriveLocation />} />
+        <Route path="/emercall" element={<EmerCall />} />
       </Routes>
     </BrowserRouter>
   );

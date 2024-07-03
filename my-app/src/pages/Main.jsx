@@ -5,14 +5,9 @@ import Image from "../components/Image/Image";
 import Typo from "../components/Typo/Typo";
 import { ButtonCall, ButtonEmer, ButtonScan } from "../assets/image";
 import { useNavigate } from "react-router-dom";
-import Header2 from "../components/Header/Header2";
+import Header1 from "../components/Header/Header1";
 
 const Main = () => {
-  const Alert = () => {
-    alert("클릭 테스트");
-    // 각 호출 페이지로 navigate되도록 수정 필요
-  };
-
   const navigate = useNavigate();
 
   // 일반 호출
@@ -26,10 +21,13 @@ const Main = () => {
   };
 
   // 긴급 호출
+  const goToEmerCallPage = () => {
+    navigate("/emercall");
+  };
 
   return (
     <Container>
-      <Header2/>
+      <Header1 />
       <Flex>
         <Flex align="flex-start">
           <Typo
@@ -79,7 +77,11 @@ const Main = () => {
           color="gray"
           style={{ margin: "0" }}
         />
-        <Image src={ButtonEmer} onClick={Alert} style={{ marginTop: "20px" }} />
+        <Image
+          src={ButtonEmer}
+          onClick={goToEmerCallPage}
+          style={{ marginTop: "20px" }}
+        />
       </Flex>
     </Container>
   );
