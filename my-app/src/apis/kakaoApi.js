@@ -9,7 +9,6 @@ const kakaoApi = axios.create({
   },
 });
 
-// 모빌리티 api 추가
 const naviApi = axios.create({
   baseURL: "https://apis-navi.kakaomobility.com/v1",
   timeout: 5000,
@@ -21,6 +20,9 @@ const naviApi = axios.create({
 
 // 주소를 위도/경도로 변환하는 함수
 export const getAddressToCoordinate = async (address) => {
+  if (!address) {
+    throw new Error("주소가 비어있습니다.");
+  }
   try {
     const response = await kakaoApi.get("/search/address.json", {
       params: {
