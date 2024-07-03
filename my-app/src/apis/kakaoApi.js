@@ -9,6 +9,16 @@ const kakaoApi = axios.create({
   },
 });
 
+// 모빌리티 api 추가
+const naviApi = axios.create({
+  baseURL: "https://apis-navi.kakaomobility.com/v1",
+  timeout: 5000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_REST_API_KEY}`,
+  },
+});
+
 // 주소를 위도/경도로 변환하는 함수
 export const getAddressToCoordinate = async (address) => {
   try {
@@ -39,6 +49,25 @@ export const getCoordinateToAddress = async (x, y) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching address from coordinates:", error);
+    throw error;
+  }
+};
+
+// 카카오 네비를 이용해 경로를 찾는 함수
+export const getRoute = async (startX, startY, endX, endY) => {
+  try {
+    const response = await naviApi.get("/directions", {
+      params: {
+        origin: `${startX},${startY}`,
+        destination: `${endX},${endY}`,
+        priority: "RECOMMEND",
+        car_fuel: "GASOLINE",
+        car_hipass: false,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching route from coordinates:", error);
     throw error;
   }
 };
