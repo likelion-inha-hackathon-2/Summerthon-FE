@@ -11,9 +11,11 @@ import Header1 from "../components/Header/Header1";
 import { getAddressToCoordinate } from "../apis/kakaoApi";
 import { createTaxi } from "../apis/taxiApi";
 import Taxi from "../components/Taxi/Taxi";
+import { Tooltip } from "react-tooltip"; // 툴팁 라이브러리 추가
 
-const Call = () => {
+const EmerCall = () => {
   const [values, setValues] = useState({
+    // 긴급호출: 현 위치 - 도착지로 수정해야함
     starting_address: "",
     destination_address: "",
   });
@@ -97,11 +99,18 @@ const Call = () => {
       <Container>
         <Header1 />
         <Flex direction="column" align="center">
+          <Typo text="현재 위치에서" fontSize="24px" fontWeight="bold" />
+          {/* 주소지 정보 받아오기 */}
           <Typo
-            text="어디로 택시를 호출할까요?"
-            fontSize="28px"
+            text="까지 가는 택시를 호출 중입니다."
+            fontSize="24px"
             fontWeight="bold"
           />
+          {/* 툴팁 라이브러리 테스트 */}
+          <a id="not-clickable">툴팁 테스트</a>
+          <Tooltip anchorSelect="#not-clickable">
+            <p>You can't click me!</p>
+          </Tooltip>
           <Input
             label="출발지"
             name="starting_address"
@@ -131,4 +140,4 @@ const Call = () => {
   );
 };
 
-export default Call;
+export default EmerCall;
