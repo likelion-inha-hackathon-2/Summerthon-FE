@@ -72,7 +72,7 @@ const Login = () => {
         </form>
         <div>
           회원이 아니신가요?{" "}
-          <Link to="/signup/1">
+          <Link to="/signup">
             <span style={{ textDecoration: "none", color: "#0d99ff" }}>
               회원가입
             </span>
