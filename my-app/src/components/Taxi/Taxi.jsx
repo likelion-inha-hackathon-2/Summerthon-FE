@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../Button/Button";
-import { createTaxi, getNearbyTaxi, getAllTaxies } from "../../apis/taxiApi";
+import { createTaxi, getNearbyTaxi } from "../../apis/taxiApi";
 import { getAddressToCoordinate, getRoute } from "../../apis/kakaoApi";
 import Map from "../Map/Map";
 
@@ -16,7 +16,9 @@ const Taxi = () => {
   const [message, setMessage] = useState("");
   const [route, setRoute] = useState(null);
   const [destination, setDestination] = useState("");
+  const [taxi, setTaxi] = useState(null);
 
+  // 택시 생성
   const handleCreateTaxi = async () => {
     const taxiData = {
       license_number: "123-456",
@@ -37,6 +39,7 @@ const Taxi = () => {
     }
   };
 
+  // 경로 찾기 (모빌리티)
   const handleSearchRoute = async () => {
     try {
       const coords = await getAddressToCoordinate(destination);
@@ -69,11 +72,18 @@ const Taxi = () => {
 
         setMessage("경로가 성공적으로 생성되었습니다.");
 
-        // 경로가 성공적으로 생성되면 택시 호출
-        handleCreateTaxi();
+        // 가장 가까운 택시 호출
+        const nearbyTaxi = await getNearbyTaxi();
+        if (nearbyTaxi) {
+          setTaxi(nearbyTaxi);
+          setMessage(`가장 가까운 택시가 호출되었습니다.`);
+          console.log("Called Nearby Taxi:", nearbyTaxi);
+        } else {
+          setMessage("가까운 택시를 찾지 못했습니다.");
+        }
       } else {
         console.error("Invalid route data structure", routeData);
-        alert("경로를 찾을 수 없습니다. 다시 시도해주세요.");
+        alert("경로를 찾을 수 없습니다.");
       }
     } catch (error) {
       setMessage("경로 생성에 실패했습니다.");
@@ -90,8 +100,8 @@ const Taxi = () => {
         onChange={(e) => setDestination(e.target.value)}
         placeholder="도착지 주소 입력"
       />
-      <Button text="경로 찾기" onClick={handleSearchRoute} />
-      {route && <Map route={route} />}
+      <Button text="택시 호출하기" onClick={handleSearchRoute} />
+      {route && <Map route={route} taxi={taxi} />}
     </div>
   );
 };

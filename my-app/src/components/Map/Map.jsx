@@ -6,7 +6,7 @@ const StyledMap = styled.div`
   height: 300px;
 `;
 
-const Map = ({ route }) => {
+const Map = ({ route, taxi }) => {
   const mapContainer = useRef(null);
 
   useEffect(() => {
@@ -62,13 +62,30 @@ const Map = ({ route }) => {
           bounds.extend(new window.kakao.maps.LatLng(endY, endX));
           map.setBounds(bounds);
         }
+
+        // 가장 가까운 택시 마커
+        // 차라리 맵이랑 택시를 합쳐서 만들어야 하나..
+        if (taxi) {
+          const taxiMarker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(
+              taxi.latitude,
+              taxi.longitude
+            ),
+            map: map,
+            // 마커 이미지 불러오기
+            image: new window.kakao.maps.MarkerImage(
+              "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png", // 마커 이미지 URL
+              new window.kakao.maps.Size(24, 35)
+            ),
+          });
+        }
       });
     };
 
     return () => {
       document.head.removeChild(script);
     };
-  }, [route]);
+  }, [route, taxi]);
 
   return <StyledMap ref={mapContainer}></StyledMap>;
 };
