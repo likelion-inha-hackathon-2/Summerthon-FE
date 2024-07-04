@@ -1,24 +1,18 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+
 import Button from "../Button/Button";
-import Typo from "../Typo/Typo"; // Typo 컴포넌트 추가
+import Typo from "../Typo/Typo";
 import { getNearbyTaxi } from "../../apis/taxiApi";
 import { getAddressToCoordinate, getRoute } from "../../apis/kakaoApi";
 import Map from "../Map/Map";
-
-const TaxiContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-`;
+import Flex from "../Flex/Flex";
 
 const Taxi = () => {
   const [message, setMessage] = useState("");
   const [route, setRoute] = useState(null);
   const [destination, setDestination] = useState("");
-  const [taxi, setTaxi] = useState(null); // 택시 받아오기
-  const [duration, setDuration] = useState(null); // 소요 시간
+  const [taxi, setTaxi] = useState(null);
+  const [duration, setDuration] = useState(null);
 
   const handleSearchRoute = async () => {
     try {
@@ -81,7 +75,7 @@ const Taxi = () => {
 
   return (
     <div>
-      <TaxiContainer>
+      <Flex>
         {message && <p>{message}</p>}
         {taxi && (
           <div>
@@ -91,7 +85,7 @@ const Taxi = () => {
             <Typo text={`예상 소요 시간: ${duration} 분`} />
           </div>
         )}
-      </TaxiContainer>
+      </Flex>
       <input
         type="text"
         value={destination}

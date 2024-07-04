@@ -66,7 +66,7 @@ const CancelBtn = styled.button`
   }
 `;
 
-const AddInfoModal = ({
+const AddAddressModal = ({
   isModalOpen,
   onClose,
   onConfirm,
@@ -112,4 +112,4 @@ const AddInfoModal = ({
   );
 };
 
-export default AddInfoModal;
+export default AddAddressModal;
