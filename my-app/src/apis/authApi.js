@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authApi = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "http://3.36.172.57",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
