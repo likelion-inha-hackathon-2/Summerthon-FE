@@ -1,37 +1,10 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import Button from "../components/Button/Button";
-import Container from "../components/Container/Container";
+import Typo from "../components/Typo/Typo";
 import Flex from "../components/Flex/Flex";
 import Header1 from "../components/Header/Header1";
 import authApi from "../apis/authApi";
 import { useNavigate } from "react-router-dom";
-
-const ArriveButton = styled(Button)`
-  width: 100%;
-  position: relative;
-  background-color: #0d99ff;
-  padding: 10px 0;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  max-width: 300px;
-  margin-top: 20px;
-  &:hover {
-    background-color: #007acc;
-  }
-`;
-
-const Text = styled.h1`
-  position: relative;
-  bottom: 9px;
-  margin-bottom: 40px;
-  font-size: 34px;
-  font-weight: bold;
-`;
 
 function ArriveLocation() {
   const [addresses, setAddresses] = useState([]);
@@ -56,21 +29,28 @@ function ArriveLocation() {
   };
 
   return (
-    <Container>
+    <>
       <Header1 />
       <Flex direction="column" align="center">
-        <Text>어디로 가세요?</Text>
+        <Typo text="어디로 호출할까요?" fontSize="28px" fontWeight="bold" />
+        <Typo
+          text="주소지 목록을 불러왔어요."
+          fontSize="14px"
+          color="gray"
+          style={{ marginTop: 0 }}
+        />
+        {/* 주소지 목록을 동적으로 업데이트합니다. */}
         {addresses.map((address, index) => (
-          <ArriveButton
+          <Button
             key={index}
             text={address.address_name}
             onClick={() => handleDestinationClick(address)}
           >
             {address.address_name}
-          </ArriveButton>
+          </Button>
         ))}
       </Flex>
-    </Container>
+    </>
   );
 }
 

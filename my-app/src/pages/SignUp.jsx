@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Typo from "../components/Typo/Typo";
 import Button from "../components/Button/Button";
@@ -8,6 +7,7 @@ import Input from "../components/Input/Input";
 import Radio from "../components/Radio/Radio";
 import useForm from "../hooks/useForm";
 import authApi from "../apis/authApi";
+import Header2 from "../components/Header/Header2";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -94,8 +94,9 @@ const SignUp = () => {
   };
 
   return (
-    <Container>
-      <Flex direction="column" align="left">
+    <>
+      <Header2 />
+      <Flex direction="column" align="left" style={{ paddingTop: '70px' }}>
         <Typo text="회원가입" fontSize="24px" fontWeight="bold" />
         <Typo text="회원 정보" fontSize="20px" />
         <Input
@@ -177,7 +178,7 @@ const SignUp = () => {
           <Button
             text="검색"
             fontSize="14px"
-            width="60px"
+            padding="10px"
             onClick={openAddressPopup}
           />
         </Flex>
@@ -196,7 +197,7 @@ const SignUp = () => {
           disabled={!values.road_address || !values.detail_address}
         />
       </Flex>
-    </Container>
+    </>
   );
 };
 

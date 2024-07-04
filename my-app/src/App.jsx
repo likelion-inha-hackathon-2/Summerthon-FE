@@ -10,21 +10,24 @@ import MoreMyInfo from "./pages/MoreMyInfo";
 import ArriveLocation from "./pages/ArriveLocation"; // QR 스캔1 (주소지 목록 불러오기)
 import Scan from "./pages/Scan"; // QR 스캔2
 import EmerCall from "./pages/EmerCall"; // 긴급 호출
+import Layout from "./components/Layout/Layout"; // 레이아웃 컴포넌트 추가
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/main" element={<Main />} />
-        <Route path="/call" element={<Call />} />
-        <Route path="/me" element={<MyInfo />} />
-        <Route path="/more-me" element={<MoreMyInfo />} />
-        <Route path="/arrive-location" element={<ArriveLocation />} />
-        <Route path="/scan" element={<Scan />} />
-        <Route path="/emercall" element={<EmerCall />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/main" element={<Main />} />
+          <Route path="/call" element={<Call />} />
+          <Route path="/me" element={<MyInfo />} />
+          <Route path="/more-me" element={<MoreMyInfo />} />
+          <Route path="/arrive-location" element={<ArriveLocation />} />
+          <Route path="/scan" element={<Scan />} />
+          <Route path="/emercall" element={<EmerCall />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

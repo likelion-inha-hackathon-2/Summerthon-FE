@@ -4,6 +4,7 @@ import styled from "styled-components";
 const StyledMap = styled.div`
   width: 100%;
   height: 300px;
+  margin-top: 10px;
 `;
 
 const Map = ({ route, taxi }) => {

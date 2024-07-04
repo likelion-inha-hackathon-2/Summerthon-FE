@@ -1,16 +1,55 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Container from "../components/Container/Container";
+import styled from "styled-components";
 import Flex from "../components/Flex/Flex";
-import Input from "../components/Input/Input";
 import CancleButton from "../components/Button/CancleButton";
 import Modal from "../components/Modal/Modal";
 import Map from "../components/Map/Map";
 import Button from "../components/Button/Button";
 import Typo from "../components/Typo/Typo";
 import Header1 from "../components/Header/Header1";
-import {  getRoute } from "../apis/kakaoApi";
+import Input from "../components/Input/Input";
+import { getRoute } from "../apis/kakaoApi";
 import { getNearbyTaxi } from "../apis/taxiApi";
 import { useLocation } from "react-router-dom";
+
+const Container = styled.div`
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  @media (max-width: 600px) {
+    padding: 10px;
+  }
+`;
+
+// 아이폰 SE 반응형 추가
+const ContentWrapper = styled.div`
+  padding-top: 200px;
+  @media (max-width: 600px) {
+    margin-top: 280px;
+  }
+  @media (max-width: 320px) {
+    padding-top: 100px;
+  }
+`;
+
+const TaxiInfoContainer = styled.div`
+  background-color: #f0f8ff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const TaxiInfo = ({ taxi, duration, fair }) => (
+  <TaxiInfoContainer>
+    <Typo text={`택시 번호: ${taxi.license_number}`} />
+    <Typo text={`기사님 이름: ${taxi.driver_name}`} />
+    <Typo text={`기사님 전화번호: ${taxi.driver_phone}`} />
+    <Typo text={`예상 소요 시간: ${duration} 분`} />
+    <Typo text={`예상 요금: ${fair} 원`} />
+  </TaxiInfoContainer>
+);
 
 const Scan = () => {
   const [values, setValues] = useState({
@@ -22,6 +61,7 @@ const Scan = () => {
   const [taxi, setTaxi] = useState(null);
   const location = useLocation();
   const [duration, setDuration] = useState(null);
+  const [fair, setFair] = useState(null);
   const [destinationName, setDestinationName] = useState("");
 
   const findRoute = useCallback(
@@ -31,13 +71,7 @@ const Scan = () => {
       try {
         const routeData = await getRoute(startX, startY, endX, endY);
 
-        if (
-          routeData.routes &&
-          routeData.routes[0] &&
-          routeData.routes[0].sections &&
-          routeData.routes[0].sections[0] &&
-          routeData.routes[0].sections[0].roads
-        ) {
+        if (routeData.routes && routeData.routes[0]?.sections[0]?.roads) {
           const polyline = routeData.routes[0].sections[0].roads.flatMap(
             (road) =>
               road.vertexes.reduce((acc, _, index, array) => {
@@ -62,8 +96,8 @@ const Scan = () => {
           if (nearbyTaxi.taxi && nearbyTaxi.taxi.length > 0) {
             const nearestTaxi = nearbyTaxi.taxi[0];
             setTaxi(nearestTaxi);
-            setDuration(Math.ceil(nearbyTaxi.duration / 60)); // 소요 시간을 분 단위로 변환하여 설정
-            console.log("Called Nearby Taxi:", nearestTaxi);
+            setDuration(Math.ceil(nearbyTaxi.duration / 60));
+            setFair(nearbyTaxi.fair);
           } else {
             console.error("No nearby taxi found", nearbyTaxi);
             alert("가까운 택시를 찾지 못했습니다.");
@@ -112,57 +146,53 @@ const Scan = () => {
   };
 
   return (
-    <Container>
+    <>
       <Header1 />
-      <Flex direction="column" align="center">
-        <Typo text="현재 위치에서" fontSize="24px" fontWeight="bold" />
-        <Button
-          text={destinationName ? destinationName : "selected address"}
-          width="auto"
-          height="auto"
-          backgroundColor="#0d99ff"
-          hoverBackgroundColor="#007acc"
-        />
-        <Typo
-          text="까지 가는 택시를 호출 중입니다."
-          fontSize="24px"
-          fontWeight="bold"
-          style={{ margin: "0" }}
-        />
-        <Input
-          label="출발지"
-          name="starting_address"
-          placeholder="출발지를 입력하세요"
-          value={values.starting_address}
-          onChange={() => {}}
-          readOnly
-        />
-        <Input
-          label="도착지"
-          name="destination_address"
-          placeholder="도착지를 입력하세요"
-          value={values.destination_address}
-          onChange={() => {}}
-          readOnly
-        />
-        {route && <Map route={route} taxi={taxi} />}
-        {!route && <Map />} {/* 도착지 입력 전 인하대 고정 지도 표시 */}
-        {taxi && (
+      <Container>
+        <ContentWrapper>
           <Flex direction="column" align="center">
-            <Typo text={`택시 번호: ${taxi.license_number}`} />
-            <Typo text={`기사님 이름: ${taxi.driver_name}`} />
-            <Typo text={`기사님 전화번호: ${taxi.driver_phone}`} />
-            <Typo text={`예상 소요 시간: ${duration} 분`} />
+            <Typo
+              text={`${
+                destinationName ? destinationName : "selected address"
+              } 까지 가는 택시를 호출합니다.`}
+              fontSize="20px"
+              fontWeight="bold"
+            />
+            <Input
+              label="출발지"
+              name="starting_address"
+              placeholder="출발지를 입력하세요"
+              value={values.starting_address}
+              onChange={() => {}}
+              readOnly
+            />
+            <Input
+              label="도착지"
+              name="destination_address"
+              placeholder="도착지를 입력하세요"
+              value={values.destination_address}
+              onChange={() => {}}
+              readOnly
+            />
+            {route && <Map route={route} taxi={taxi} />}
+            {!route && <Map />} {/* 도착지 입력 전 인하대 고정 지도 표시 */}
+            {taxi && <TaxiInfo taxi={taxi} duration={duration} fair={fair} />}
+            <Flex
+              direction="column"
+              align="center"
+              style={{ marginTop: "20px" }}
+            >
+              <CancleButton onClick={handleCancel} />
+            </Flex>
           </Flex>
-        )}
-        <CancleButton onClick={handleCancel} />
-      </Flex>
-      <Modal
-        isDialog={isDialog}
-        onClose={handleClose}
-        onConfirm={handleConfirm}
-      />
-    </Container>
+        </ContentWrapper>
+        <Modal
+          isDialog={isDialog}
+          onClose={handleClose}
+          onConfirm={handleConfirm}
+        />
+      </Container>
+    </>
   );
 };
 

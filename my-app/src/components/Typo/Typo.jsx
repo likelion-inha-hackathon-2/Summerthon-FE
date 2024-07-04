@@ -6,8 +6,9 @@ import styled from "styled-components";
 const StyledTypo = styled.p`
   color: ${(props) => props.color || "black"};
   font-size: ${(props) => props.fontSize || "16px"};
-  font-weight: ${(props) => props.fontWeight || "normal"}; 
+  font-weight: ${(props) => props.fontWeight || "normal"};
   text-align: ${(props) => (props.center ? "center" : "left")};
+  margin-top: ${(props) => props.marginTop || "5px"};
 `;
 
 const Typo = ({ text, ...rest }) => {

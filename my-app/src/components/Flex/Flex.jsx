@@ -1,5 +1,3 @@
-// ../components/Flex/Flex
-
 import React from "react";
 import styled from "styled-components";
 
@@ -8,15 +6,29 @@ const StyledFlex = styled.div`
   justify-content: ${(props) => props.justify || "center"};
   align-items: ${(props) => props.align || "center"};
   flex-direction: ${(props) => props.direction || "column"};
+  padding-top: ${(props) => props.paddingTop || "0"};
 `;
 
-const Flex = ({ direction, justify, align, ...props }) => {
+const Flex = ({
+  direction,
+  justify,
+  align,
+  paddingTop,
+  mobilePaddingTop,
+  tabletPaddingTop,
+  desktopPaddingTop,
+  ...props
+}) => {
   return (
     <StyledFlex
       direction={direction}
       justify={justify}
       align={align}
-      {...props/* Flex 속성을 간편하게 적용하기 위한 컴포넌트입니다. */}
+      paddingTop={paddingTop}
+      mobilePaddingTop={mobilePaddingTop}
+      tabletPaddingTop={tabletPaddingTop}
+      desktopPaddingTop={desktopPaddingTop}
+      {...props}
     />
   );
 };

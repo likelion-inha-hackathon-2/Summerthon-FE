@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Image from "../components/Image/Image";
 import Typo from "../components/Typo/Typo";
@@ -26,22 +25,17 @@ const Main = () => {
   };
 
   return (
-    <Container>
+    <>
       <Header1 />
       <Flex>
-        <Flex align="flex-start">
+        <Flex align="flex-start" style={{ paddingTop: "100px" }}>
           <Typo
             text="안녕하세요!"
             fontSize="28px"
             fontWeight="bold"
-            style={{ margin: "0" }}
+            style={{ marginBottom: "0px" }}
           />
-          <Typo
-            text="무엇을 도와드릴까요?"
-            fontSize="28px"
-            fontWeight="bold"
-            style={{ marginTop: "20px" }}
-          />
+          <Typo text="무엇을 도와드릴까요?" fontSize="28px" fontWeight="bold" />
         </Flex>
         <Typo
           text="택시 호출하기"
@@ -50,8 +44,7 @@ const Main = () => {
           color="#0D99FF"
         />
         <Typo
-          // 호출 예상 시간으로 수정 필요
-          text="지금 호출하면 평균 12분 내에 택시가 도착해요!"
+          text="택시 호출 방법을 선택해주세요!"
           fontSize="14px"
           color="gray"
           style={{ margin: "0" }}
@@ -83,7 +76,7 @@ const Main = () => {
           style={{ marginTop: "20px" }}
         />
       </Flex>
-    </Container>
+    </>
   );
 };
 

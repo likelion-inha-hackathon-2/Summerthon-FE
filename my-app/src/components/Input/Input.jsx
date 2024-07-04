@@ -7,6 +7,7 @@ const InputWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin: 3px;
 `;
 
 // 레이블

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import styled from "styled-components";
 import Button from "../Button/Button";
 import Typo from "../Typo/Typo";
 import { getNearbyTaxi } from "../../apis/taxiApi";
@@ -13,6 +13,7 @@ const Taxi = () => {
   const [destination, setDestination] = useState("");
   const [taxi, setTaxi] = useState(null);
   const [duration, setDuration] = useState(null);
+  const [fair, setFair] = useState(null); // 요금 정보를 저장할 상태
 
   const handleSearchRoute = async () => {
     try {
@@ -54,6 +55,7 @@ const Taxi = () => {
           const nearestTaxi = nearbyTaxi.taxi[0];
           setTaxi(nearestTaxi);
           setDuration(Math.ceil(nearbyTaxi.duration / 60)); // 소요 시간을 분 단위로 변환하여 설정
+          setFair(nearbyTaxi.fair); // 요금 정보를 상태에 저장
           setMessage(
             `가장 가까운 택시가 호출되었습니다. 소요 시간: ${Math.ceil(
               nearbyTaxi.duration / 60
@@ -74,27 +76,28 @@ const Taxi = () => {
   };
 
   return (
-    <div>
-      <Flex>
-        {message && <p>{message}</p>}
+    <Container>
+      <Flex direction="column" align="center">
+        {message && <Message>{message}</Message>}
         {taxi && (
-          <div>
+          <TaxiInfo>
             <Typo text={`택시 번호: ${taxi.license_number}`} />
             <Typo text={`기사님 이름: ${taxi.driver_name}`} />
             <Typo text={`기사님 전화번호: ${taxi.driver_phone}`} />
             <Typo text={`예상 소요 시간: ${duration} 분`} />
-          </div>
+            <Typo text={`예상 요금: ${fair} 원`} />
+          </TaxiInfo>
         )}
       </Flex>
-      <input
+      <Input
         type="text"
         value={destination}
         onChange={(e) => setDestination(e.target.value)}
         placeholder="도착지 주소 입력"
       />
-      <Button text="택시 호출하기" onClick={handleSearchRoute} />
+      <StyledButton text="택시 호출하기" onClick={handleSearchRoute} />
       {route && <Map route={route} taxi={taxi} />}
-    </div>
+    </Container>
   );
 };
 

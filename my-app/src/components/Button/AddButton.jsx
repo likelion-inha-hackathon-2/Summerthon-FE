@@ -7,7 +7,7 @@ const StyledAddButton = styled.div`
 `;
 
 // 수정 가능하도록 ...rest 추가
-const AddButton = ({ onClick, text, fontSize = "14px", width = "150px", ...rest }) => {
+const AddButton = ({ onClick, text, fontSize = "14px", width = "auto", ...rest }) => {
   return (
     <StyledAddButton>
       <Button text={text} fontSize={fontSize} width={width} onClick={onClick} {...rest} />
