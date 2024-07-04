@@ -1,16 +1,10 @@
-import authApi from "./authApi";
+import authApi from "./authApi"; // 여기서 토큰을 이미 가져옴
 
 // 환경 변수 .env에 설정 완료
 
 export const sendEmail = async () => {
   try {
-    const token = localStorage.getItem("token");
-
-    const response = await authApi.get("/sendmail", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await authApi.get("/sendmail");
 
     // 응답 데이터 그대로 리턴
     return response.data;

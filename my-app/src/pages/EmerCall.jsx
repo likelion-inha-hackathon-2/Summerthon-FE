@@ -27,9 +27,13 @@ const EmerCall = () => {
 
   const handleSendEmail = async () => {
     try {
-      const response = await sendEmail("인천광역시 미추홀구 용현동 292-7", "");
+      const response = await sendEmail();
+      // 성공 로직 간단하게 처리 200
       if (response.status === "200") {
         alert(response.message);
+      } else if (response.status === "401") {
+        alert(response.message);
+        // 로그인이 필요한 경우 로그인 페이지로 리디렉션하는 로직을 추가할 수 있습니다.
       } else {
         alert("이메일 전송이 실패하였습니다.");
       }
