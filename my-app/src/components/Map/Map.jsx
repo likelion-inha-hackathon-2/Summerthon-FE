@@ -6,7 +6,7 @@ const StyledMap = styled.div`
   height: 300px;
 `;
 
-const Map = ({ route }) => {
+const Map = ({ route, taxi }) => {
   const mapContainer = useRef(null);
 
   useEffect(() => {
@@ -17,17 +17,18 @@ const Map = ({ route }) => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        let mapOptions;
-        const map = new window.kakao.maps.Map(mapContainer.current, {
+        const mapOptions = {
           center: new window.kakao.maps.LatLng(
             37.4482020408321,
             126.651415033662
-          ), // 기본 좌표 인하대로 초기화
+          ), // 인하대 좌표
           level: 5,
-        });
+        };
 
-        if (route) {
-          const { startX, startY, endX, endY } = route;
+        const map = new window.kakao.maps.Map(mapContainer.current, mapOptions);
+
+        if (route && route.polyline) {
+          const { startX, startY, endX, endY, polyline } = route;
 
           // 출발지 표시하는 마커
           const startMarker = new window.kakao.maps.Marker({
@@ -42,12 +43,11 @@ const Map = ({ route }) => {
           });
 
           // 경로 나타내기
-          const linePath = [
-            new window.kakao.maps.LatLng(startY, startX),
-            new window.kakao.maps.LatLng(endY, endX),
-          ];
+          const linePath = polyline.map(
+            (point) => new window.kakao.maps.LatLng(point.y, point.x)
+          );
 
-          const polyline = new window.kakao.maps.Polyline({
+          const polylinePath = new window.kakao.maps.Polyline({
             path: linePath,
             strokeWeight: 5,
             strokeColor: "#FF0000",
@@ -55,12 +55,29 @@ const Map = ({ route }) => {
             strokeStyle: "solid",
           });
 
-          polyline.setMap(map);
+          polylinePath.setMap(map);
 
           const bounds = new window.kakao.maps.LatLngBounds();
           bounds.extend(new window.kakao.maps.LatLng(startY, startX));
           bounds.extend(new window.kakao.maps.LatLng(endY, endX));
           map.setBounds(bounds);
+        }
+
+        // 가장 가까운 택시 마커
+        // 차라리 맵이랑 택시를 합쳐서 만들어야 하나..
+        if (taxi) {
+          const taxiMarker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(
+              taxi.latitude,
+              taxi.longitude
+            ),
+            map: map,
+            // 마커 이미지 불러오기
+            image: new window.kakao.maps.MarkerImage(
+              "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png", // 마커 이미지 URL
+              new window.kakao.maps.Size(24, 35)
+            ),
+          });
         }
       });
     };
@@ -68,7 +85,7 @@ const Map = ({ route }) => {
     return () => {
       document.head.removeChild(script);
     };
-  }, [route]);
+  }, [route, taxi]);
 
   return <StyledMap ref={mapContainer}></StyledMap>;
 };

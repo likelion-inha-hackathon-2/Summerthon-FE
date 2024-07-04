@@ -8,21 +8,21 @@ import Map from "../components/Map/Map";
 import Button from "../components/Button/Button";
 import Typo from "../components/Typo/Typo";
 import Header1 from "../components/Header/Header1";
-import { getAddressToCoordinate } from "../apis/kakaoApi";
+import { getAddressToCoordinate, getRoute } from "../apis/kakaoApi";
 import { createTaxi } from "../apis/taxiApi";
 import { useLocation } from "react-router-dom";
 import Taxi from "../components/Taxi/Taxi";
 
 const Scan = () => {
   const [values, setValues] = useState({
-    starting_address: "인천광역시 미추홀구 용현동 292-7", // 고정된 출발지
+    starting_address: "인천광역시 미추홀구 용현동 292-7",
     destination_address: "",
   });
   const [isDialog, setIsDialog] = useState(false);
   const [route, setRoute] = useState(null);
   const [taxi, setTaxi] = useState(null);
   const location = useLocation();
-  const [destinationName, setDestinationName] = useState(""); // 추가된 상태
+  const [destinationName, setDestinationName] = useState("");
 
   useEffect(() => {
     if (location.state && location.state.address) {
@@ -33,12 +33,12 @@ const Scan = () => {
         destination_address: road_address,
       });
       setRoute({
-        startX: "126.651415033662", // 고정된 출발지 좌표
+        startX: "126.651415033662",
         startY: "37.4482020408321",
         endX: longitude,
         endY: latitude,
       });
-      setDestinationName(address_name); // 주소지 이름 설정
+      setDestinationName(address_name);
     }
   }, [location.state]);
 
@@ -61,8 +61,8 @@ const Scan = () => {
   const handleConfirm = () => {
     setIsDialog(false);
     setValues({
-      starting_address: "인천광역시 미추홀구 용현동 292-7", // 고정된 출발지
-      destination_address: "", // 저장된 주소 불러오기
+      starting_address: "인천광역시 미추홀구 용현동 292-7",
+      destination_address: "",
     });
     setRoute(null);
     setTaxi(null);
@@ -81,18 +81,33 @@ const Scan = () => {
         !destCoords.documents ||
         !destCoords.documents[0]
       ) {
-        console.error("Invalid coordinates data", startCoords, destCoords);
         alert("주소를 다시 확인하세요.");
         return;
       }
 
-      const routeData = {
+      const routeData = await getRoute(
+        startCoords.documents[0].x,
+        startCoords.documents[0].y,
+        destCoords.documents[0].x,
+        destCoords.documents[0].y
+      );
+
+      const polyline = routeData.routes[0].sections[0].roads.flatMap((road) =>
+        road.vertexes.reduce((acc, _, index, array) => {
+          if (index % 2 === 0) {
+            acc.push({ x: array[index], y: array[index + 1] });
+          }
+          return acc;
+        }, [])
+      );
+
+      setRoute({
         startX: startCoords.documents[0].x,
         startY: startCoords.documents[0].y,
         endX: destCoords.documents[0].x,
         endY: destCoords.documents[0].y,
-      };
-      setRoute(routeData);
+        polyline,
+      });
 
       const taxiData = {
         starting_address: values.starting_address,
@@ -140,11 +155,9 @@ const Scan = () => {
             placeholder="도착지를 입력하세요"
             value={values.destination_address}
             onChange={handleChange}
-            readOnly
           />
-
-          <Taxi onClick={handleFindRoute} />
-          <Map route={route} taxi={taxi} />
+          <Button text="택시 호출하기" onClick={handleFindRoute} />
+          {route && <Map route={route} taxi={taxi} />}
           <CancleButton onClick={handleCancel} />
         </Flex>
       </Container>
