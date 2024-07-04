@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../Button/Button";
-import { createTaxi, getNearbyTaxi } from "../../apis/taxiApi";
+import Typo from "../Typo/Typo"; // Typo 컴포넌트 추가
+import { getNearbyTaxi } from "../../apis/taxiApi";
 import { getAddressToCoordinate, getRoute } from "../../apis/kakaoApi";
 import Map from "../Map/Map";
 
@@ -16,30 +17,9 @@ const Taxi = () => {
   const [message, setMessage] = useState("");
   const [route, setRoute] = useState(null);
   const [destination, setDestination] = useState("");
-  const [taxi, setTaxi] = useState(null);
+  const [taxi, setTaxi] = useState(null); // 택시 받아오기
+  const [duration, setDuration] = useState(null); // 소요 시간
 
-  // 택시 생성
-  const handleCreateTaxi = async () => {
-    const taxiData = {
-      license_number: "123-456",
-      latitude: (37.4482020408321).toFixed(6).toString(), // 소수점 이하 6자리로 제한하고 문자열로 변환
-      longitude: (126.651415033662).toFixed(6).toString(), // 소수점 이하 6자리로 제한하고 문자열로 변환
-      driver_name: "김기사",
-      driver_phone: "010-1234-5678",
-      acceptance: 1,
-    };
-
-    try {
-      const response = await createTaxi(taxiData);
-      setMessage("택시 정보가 성공적으로 생성되었습니다.");
-      console.log("Created Taxi:", response);
-    } catch (error) {
-      setMessage("택시 정보 생성에 실패했습니다.");
-      console.error("Error:", error);
-    }
-  };
-
-  // 경로 찾기 (모빌리티)
   const handleSearchRoute = async () => {
     try {
       const coords = await getAddressToCoordinate(destination);
@@ -73,11 +53,19 @@ const Taxi = () => {
         setMessage("경로가 성공적으로 생성되었습니다.");
 
         // 가장 가까운 택시 호출
-        const nearbyTaxi = await getNearbyTaxi();
-        if (nearbyTaxi) {
-          setTaxi(nearbyTaxi);
-          setMessage(`가장 가까운 택시가 호출되었습니다.`);
-          console.log("Called Nearby Taxi:", nearbyTaxi);
+        const nearbyTaxi = await getNearbyTaxi({
+          destination_address: destination,
+        });
+        if (nearbyTaxi.taxi && nearbyTaxi.taxi.length > 0) {
+          const nearestTaxi = nearbyTaxi.taxi[0];
+          setTaxi(nearestTaxi);
+          setDuration(Math.ceil(nearbyTaxi.duration / 60)); // 소요 시간을 분 단위로 변환하여 설정
+          setMessage(
+            `가장 가까운 택시가 호출되었습니다. 소요 시간: ${Math.ceil(
+              nearbyTaxi.duration / 60
+            )} 분`
+          );
+          console.log("Called Nearby Taxi:", nearestTaxi);
         } else {
           setMessage("가까운 택시를 찾지 못했습니다.");
         }
@@ -93,7 +81,17 @@ const Taxi = () => {
 
   return (
     <div>
-      <TaxiContainer>{message && <p>{message}</p>}</TaxiContainer>
+      <TaxiContainer>
+        {message && <p>{message}</p>}
+        {taxi && (
+          <div>
+            <Typo text={`택시 번호: ${taxi.license_number}`} />
+            <Typo text={`기사님 이름: ${taxi.driver_name}`} />
+            <Typo text={`기사님 전화번호: ${taxi.driver_phone}`} />
+            <Typo text={`예상 소요 시간: ${duration} 분`} />
+          </div>
+        )}
+      </TaxiContainer>
       <input
         type="text"
         value={destination}

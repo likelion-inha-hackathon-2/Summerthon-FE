@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Input from "../Input/Input";
 
+// 주소지 추가 등록 모달
 const InfoForm = styled.div`
   display: flex;
   flex-direction: column;
@@ -69,7 +70,6 @@ const AddInfoModal = ({
   isModalOpen,
   onClose,
   onConfirm,
-  modalType,
   newPageData,
   handleInputChange,
   errorMessage,
@@ -80,49 +80,27 @@ const AddInfoModal = ({
     <ModalOverlay>
       <ModalContent>
         <InfoForm>
-          {modalType === "protector" && (
-            <>
-              <Input
-                label="보호자 이름"
-                id="protector_name"
-                name="protector_name"
-                value={newPageData.protector_name || ""}
-                onChange={handleInputChange}
-              />
-              <Input
-                label="보호자 이메일"
-                id="protector_email"
-                name="protector_email"
-                value={newPageData.protector_email || ""}
-                onChange={handleInputChange}
-              />
-            </>
-          )}
-          {modalType === "address" && (
-            <>
-              <Input
-                label="주소지 이름"
-                id="address_name"
-                name="address_name"
-                value={newPageData.address_name || ""}
-                onChange={handleInputChange}
-              />
-              <Input
-                label="도로명 주소"
-                id="road_address"
-                name="road_address"
-                value={newPageData.road_address || ""}
-                onChange={handleInputChange}
-              />
-              <Input
-                label="상세 주소"
-                id="detail_address"
-                name="detail_address"
-                value={newPageData.detail_address || ""}
-                onChange={handleInputChange}
-              />
-            </>
-          )}
+          <Input
+            label="주소지 이름"
+            id="address_name"
+            name="address_name"
+            value={newPageData.address_name || ""}
+            onChange={handleInputChange}
+          />
+          <Input
+            label="도로명 주소"
+            id="road_address"
+            name="road_address"
+            value={newPageData.road_address || ""}
+            onChange={handleInputChange}
+          />
+          <Input
+            label="상세 주소"
+            id="detail_address"
+            name="detail_address"
+            value={newPageData.detail_address || ""}
+            onChange={handleInputChange}
+          />
           {errorMessage && <div>{errorMessage}</div>}
         </InfoForm>
         <ButtonWrapper>
