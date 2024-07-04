@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Input from "../components/Input/Input";
@@ -10,7 +10,6 @@ import Typo from "../components/Typo/Typo";
 import Header1 from "../components/Header/Header1";
 import { getAddressToCoordinate, getRoute } from "../apis/kakaoApi";
 import { getNearbyTaxi } from "../apis/taxiApi";
-import { useLocation } from "react-router-dom";
 
 const Call = () => {
   const [values, setValues] = useState({
@@ -20,7 +19,7 @@ const Call = () => {
   const [isDialog, setIsDialog] = useState(false);
   const [route, setRoute] = useState(null);
   const [taxi, setTaxi] = useState(null);
-  const location = useLocation();
+  const [duration, setDuration] = useState(null);
 
   const findRoute = useCallback(
     async (endX, endY) => {
@@ -57,9 +56,15 @@ const Call = () => {
           const nearbyTaxi = await getNearbyTaxi({
             destination_address: values.starting_address,
           });
-          if (nearbyTaxi) {
-            setTaxi(nearbyTaxi);
-            console.log("Called Nearby Taxi:", nearbyTaxi);
+          if (nearbyTaxi.taxi && nearbyTaxi.taxi.length > 0) {
+            // 택시 배열에서 첫번째 인덱스를 배차
+            const nearestTaxi = nearbyTaxi.taxi[0];
+            setTaxi(nearestTaxi);
+            setDuration(Math.ceil(nearbyTaxi.duration / 60)); // 소요 시간을 분 단위로 변환하여 설정
+            console.log("Called Nearby Taxi:", nearestTaxi);
+          } else {
+            console.error("No nearby taxi found", nearbyTaxi);
+            alert("가까운 택시를 찾지 못했습니다.");
           }
         } else {
           console.error("Invalid route data structure", routeData);
@@ -72,17 +77,6 @@ const Call = () => {
     },
     [values.starting_address]
   );
-
-  useEffect(() => {
-    if (location.state && location.state.address) {
-      const { road_address, latitude, longitude } = location.state.address;
-      setValues((prevValues) => ({
-        ...prevValues,
-        destination_address: road_address,
-      }));
-      findRoute(longitude, latitude);
-    }
-  }, [location.state, findRoute]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -135,42 +129,48 @@ const Call = () => {
   };
 
   return (
-    <div>
-      <Container>
-        <Header1 />
-        <Flex direction="column" align="center">
-          <Typo
-            text="현재 위치에서 택시를 호출합니다."
-            fontSize="24px"
-            fontWeight="bold"
-          />
-          <Input
-            label="출발지"
-            name="starting_address"
-            placeholder="출발지를 입력하세요"
-            value={values.starting_address}
-            onChange={handleChange}
-            readOnly
-          />
-          <Input
-            label="도착지"
-            name="destination_address"
-            placeholder="도착지를 입력하세요"
-            value={values.destination_address}
-            onChange={handleChange}
-          />
-          <Button text="택시 호출하기" onClick={handleFindRoute} />
-          {route && <Map route={route} taxi={taxi} />}
-          {!route && <Map />} {/* 도착지 입력 전 인하대 고정 지도 표시 */}
-          <CancleButton onClick={handleCancel} />
-        </Flex>
-      </Container>
+    <Container>
+      <Header1 />
+      <Flex direction="column" align="center">
+        <Typo
+          text="현재 위치에서 택시를 호출합니다."
+          fontSize="24px"
+          fontWeight="bold"
+        />
+        <Input
+          label="출발지"
+          name="starting_address"
+          placeholder="출발지를 입력하세요"
+          value={values.starting_address}
+          onChange={handleChange}
+          readOnly
+        />
+        <Input
+          label="도착지"
+          name="destination_address"
+          placeholder="도착지를 입력하세요"
+          value={values.destination_address}
+          onChange={handleChange}
+        />
+        <Button text="택시 호출하기" onClick={handleFindRoute} />
+        {route && <Map route={route} taxi={taxi} />}
+        {!route && <Map />} {/* 도착지 입력 전 인하대 고정 지도 표시 */}
+        {taxi && (
+          <Flex direction="column" align="center">
+            <Typo text={`택시 번호: ${taxi.license_number}`} />
+            <Typo text={`기사님 이름: ${taxi.driver_name}`} />
+            <Typo text={`기사님 전화번호: ${taxi.driver_phone}`} />
+            <Typo text={`예상 소요 시간: ${duration} 분`} />
+          </Flex>
+        )}
+        <CancleButton onClick={handleCancel} />
+      </Flex>
       <Modal
         isDialog={isDialog}
         onClose={handleClose}
         onConfirm={handleConfirm}
       />
-    </div>
+    </Container>
   );
 };
 
