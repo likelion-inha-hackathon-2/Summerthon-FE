@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
@@ -39,19 +38,30 @@ const Login = () => {
       if (error.response) {
         alert(error.response.data.message || "로그인에 실패했습니다.");
       } else if (error.request) {
-        alert("서버와의 통신에 실패했습니다. 네트워크 연결을 확인해주세요.");
+        alert("서버와의 통신에 실패했습니다.");
       } else {
-        alert("로그인 처리 중 오류가 발생했습니다.");
+        alert("로그인에 실패했습니다.");
       }
     }
   };
 
   return (
-    <Container>
+    <>
       <Header2 />
-      <Flex direction="column" justify="center" align="center">
+      <Flex
+        direction="column"
+        justify="center"
+        align="center"
+        style={{
+          paddingLeft: "10px",
+          paddingRight: "10px",
+        }}
+      >
         <h1>로그인</h1>
-        <form onSubmit={handleLogin}>
+        <form
+          onSubmit={handleLogin}
+          style={{ width: "100%", maxWidth: "400px" }}
+        >
           <Input
             label="아이디"
             type="text"
@@ -59,6 +69,7 @@ const Login = () => {
             value={values.user_login_id}
             onChange={handleChange}
             placeholder="아이디를 입력하세요"
+            style={{ marginBottom: "10px" }}
           />
           <Input
             label="비밀번호"
@@ -67,19 +78,21 @@ const Login = () => {
             value={values.password}
             onChange={handleChange}
             placeholder="비밀번호를 입력하세요"
+            style={{ marginBottom: "20px" }}
           />
-          <Button text="로그인" type="submit" />
+          <Button text="로그인" type="submit" style={{ width: "100%" }} />
         </form>
-        <div>
+        <div style={{ marginTop: "20px" }}>
           회원이 아니신가요?{" "}
-          <Link to="/signup">
-            <span style={{ textDecoration: "none", color: "#0d99ff" }}>
-              회원가입
-            </span>
+          <Link
+            to="/signup"
+            style={{ textDecoration: "none", color: "#0d99ff" }}
+          >
+            <span>회원가입</span>
           </Link>
         </div>
       </Flex>
-    </Container>
+    </>
   );
 };
 

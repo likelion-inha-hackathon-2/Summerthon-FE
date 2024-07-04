@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Container from "../components/Container/Container";
 import Typo from "../components/Typo/Typo";
@@ -57,7 +56,7 @@ const MoreMyInfo = () => {
   }, []);
 
   return (
-    <Container>
+    <>
       <Header1 />
       {newData.length > 0 ? (
         <Flex>
@@ -128,7 +127,7 @@ const MoreMyInfo = () => {
           <Typo text="추가된 정보가 없습니다." />
         </Container>
       )}
-    </Container>
+    </>
   );
 };
 

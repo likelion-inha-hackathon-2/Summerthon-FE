@@ -1,5 +1,3 @@
-// ../components/Container/Container.js
-
 import React from "react";
 import styled from "styled-components";
 
@@ -18,13 +16,13 @@ const ContainerWrapper = styled.div`
   background-color: #fff;
   border: 3px solid #e6e6e6;
   border-radius: 10px;
-  width: 430px;
+  width: 320px; /* iPhone SE */
+  height: 568px; /* iPhone SE */
   max-width: 100%;
-  height: 932px;
   padding: 0 20px;
   margin: 0 auto;
-  
-  @media (max-width: 430px) {
+
+  @media (max-width: 320px) {
     width: 100%;
     height: auto;
   }

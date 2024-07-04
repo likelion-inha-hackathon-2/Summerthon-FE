@@ -6,9 +6,7 @@ import { ButtonCancle } from "../../assets/image";
 
 const CancleButton = ({ onClick }) => {
   return (
-    <div onClick={onClick} style={{ cursor: "pointer" }}>
-      {/* 지도 */}
-      
+    <div onClick={onClick} style={{ cursor: "pointer", margin: "20px" }}>
       <Image src={ButtonCancle} />
     </div>
   );

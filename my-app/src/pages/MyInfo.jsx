@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Container from "../components/Container/Container";
 import Input from "../components/Input/Input";
 import Flex from "../components/Flex/Flex";
 import authApi from "../apis/authApi";
@@ -17,7 +16,7 @@ const InfoForm = styled.div`
   width: 100%;
   padding: 0 10px;
   margin: 30px 0; //
-  max-width: 400px;
+
   text-align: left;
 `;
 
@@ -156,8 +155,8 @@ function MyInfo() {
   };
 
   return (
-    <Container>
-      <Header2>내 정보</Header2>
+    <>
+      <Header2 />
       <Flex direction="column" align="center">
         <InfoForm>
           <Input label="이름" value={userInfo.user_name} readOnly />
@@ -177,7 +176,7 @@ function MyInfo() {
         </Flex>
         <AddButton
           text="추가 등록한 정보 보기"
-          width="180px"
+        
           onClick={handleMoreInfo}
         />
       </Flex>
@@ -199,7 +198,7 @@ function MyInfo() {
         handleInputChange={handleChange}
         errorMessage={errorMessage}
       />
-    </Container>
+    </>
   );
 }
 

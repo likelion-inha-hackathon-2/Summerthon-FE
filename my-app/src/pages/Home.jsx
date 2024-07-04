@@ -1,10 +1,9 @@
 import React from "react";
-import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Image from "../components/Image/Image";
 import Typo from "../components/Typo/Typo";
 import Button from "../components/Button/Button";
-import { ImageTaxi } from "../assets/image";
+import { ImageLogo } from "../assets/image";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -15,18 +14,12 @@ const Home = () => {
   };
 
   return (
-    <Container>
-      <Flex direction="column" justify="center" align="center">
-        <Image src={ImageTaxi} width={"309px"} height={"228px"} />
-        <Typo text="택시 서비스" fontSize="28px" fontWeight="bold" />
-        <Typo
-          text="아래 버튼을 눌러 시작하세요!"
-          fontSize="18px"
-          color="gray"
-        />
-        <Button text="시작하기" fontSize="20px" onClick={goToLoginPage} />
-      </Flex>
-    </Container>
+    <Flex direction="column" justify="center" align="center">
+      <Image src={ImageLogo} width={"309px"} height={"auto"} />
+
+      <Typo text="당신을 위한 택시 서비스" fontSize="20px" fontWeight="bold" />
+      <Button text="바로 시작하세요!" fontSize="20px" onClick={goToLoginPage} />
+    </Flex>
   );
 };
 

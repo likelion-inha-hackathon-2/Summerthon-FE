@@ -1,3 +1,5 @@
+// src/components/Header/Header1.jsx
+
 import React from "react";
 import styled from "styled-components";
 import Image from "../Image/Image";
@@ -9,19 +11,31 @@ const Wrapper = styled.div`
   top: 0;
   width: 100%;
   z-index: 100;
+  background: #0d99ff;
 `;
 
 const Container = styled.div`
   display: flex;
-  width: 473px;
-  height: 64px;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #dee5ed;
+  height: 56px;
   margin: 0 auto;
   background: #0d99ff;
+  border-bottom: 1px solid #dee5ed;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
+
+  /* 모바일 설정 (iPhone SE) */
+  @media (max-width: 320px) {
+    width: 320px;
+ 
+  }
+
+  /* 데스크톱 설정 (1440x1024) */
+  @media (min-width: 1440px) {
+    width: 1440px;
+ 
+  }
 `;
 
 const IconContainer = styled.div`
@@ -36,7 +50,7 @@ const TextContainer = styled.div`
   align-items: center;
   padding-right: 20px;
   cursor: pointer;
-  color: #ffffff; 
+  color: #ffffff;
   font-size: 20px;
 `;
 
