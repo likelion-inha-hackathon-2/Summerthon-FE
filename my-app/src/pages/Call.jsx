@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Container from "../components/Container/Container";
 import Flex from "../components/Flex/Flex";
 import Input from "../components/Input/Input";
@@ -9,7 +9,7 @@ import Button from "../components/Button/Button";
 import Typo from "../components/Typo/Typo";
 import Header1 from "../components/Header/Header1";
 import { getAddressToCoordinate, getRoute } from "../apis/kakaoApi";
-import { createTaxi, getNearbyTaxi } from "../apis/taxiApi";
+import { getNearbyTaxi } from "../apis/taxiApi";
 import { useLocation } from "react-router-dom";
 
 const Call = () => {
@@ -22,6 +22,57 @@ const Call = () => {
   const [taxi, setTaxi] = useState(null);
   const location = useLocation();
 
+  const findRoute = useCallback(
+    async (endX, endY) => {
+      const startX = "126.651415033662";
+      const startY = "37.4482020408321";
+      try {
+        const routeData = await getRoute(startX, startY, endX, endY);
+
+        if (
+          routeData.routes &&
+          routeData.routes[0] &&
+          routeData.routes[0].sections &&
+          routeData.routes[0].sections[0] &&
+          routeData.routes[0].sections[0].roads
+        ) {
+          const polyline = routeData.routes[0].sections[0].roads.flatMap(
+            (road) =>
+              road.vertexes.reduce((acc, _, index, array) => {
+                if (index % 2 === 0) {
+                  acc.push({ x: array[index], y: array[index + 1] });
+                }
+                return acc;
+              }, [])
+          );
+
+          setRoute({
+            startX,
+            startY,
+            endX,
+            endY,
+            polyline,
+          });
+
+          const nearbyTaxi = await getNearbyTaxi({
+            destination_address: values.starting_address,
+          });
+          if (nearbyTaxi) {
+            setTaxi(nearbyTaxi);
+            console.log("Called Nearby Taxi:", nearbyTaxi);
+          }
+        } else {
+          console.error("Invalid route data structure", routeData);
+          alert("경로를 찾을 수 없습니다. 다시 시도해주세요.");
+        }
+      } catch (error) {
+        console.error("Error finding route:", error);
+        alert("경로를 찾는 도중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+    },
+    [values.starting_address]
+  );
+
   useEffect(() => {
     if (location.state && location.state.address) {
       const { road_address, latitude, longitude } = location.state.address;
@@ -29,9 +80,9 @@ const Call = () => {
         ...prevValues,
         destination_address: road_address,
       }));
-      findRoute("126.651415033662", "37.4482020408321", longitude, latitude);
+      findRoute(longitude, latitude);
     }
-  }, [location.state]);
+  }, [location.state, findRoute]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,45 +110,6 @@ const Call = () => {
     setTaxi(null);
   };
 
-  const findRoute = async (endX, endY) => {
-    const startX = "126.651415033662";
-    const startY = "37.4482020408321";
-    try {
-      const routeData = await getRoute(startX, startY, endX, endY);
-
-      if (
-        routeData.routes &&
-        routeData.routes[0] &&
-        routeData.routes[0].sections &&
-        routeData.routes[0].sections[0] &&
-        routeData.routes[0].sections[0].roads
-      ) {
-        const polyline = routeData.routes[0].sections[0].roads.flatMap((road) =>
-          road.vertexes.reduce((acc, _, index, array) => {
-            if (index % 2 === 0) {
-              acc.push({ x: array[index], y: array[index + 1] });
-            }
-            return acc;
-          }, [])
-        );
-
-        setRoute({
-          startX,
-          startY,
-          endX,
-          endY,
-          polyline,
-        });
-      } else {
-        console.error("Invalid route data structure", routeData);
-        alert("경로를 찾을 수 없습니다. 다시 시도해주세요.");
-      }
-    } catch (error) {
-      console.error("Error finding route:", error);
-      alert("경로를 찾는 도중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
-  };
-
   const handleFindRoute = async () => {
     const { destination_address } = values;
     if (!destination_address) {
@@ -117,17 +129,6 @@ const Call = () => {
       const { x: endX, y: endY } = destCoords.documents[0];
 
       findRoute(endX, endY);
-
-      const taxiData = {
-        license_number: "123-456",
-        latitude: "37.4482020408321",
-        longitude: "126.651415033662",
-        driver_name: "김기사",
-        driver_phone: "010-1234-5678",
-        acceptance: 1,
-      };
-      const createdTaxi = await createTaxi(taxiData);
-      setTaxi(createdTaxi);
     } catch (error) {
       console.error("Error finding route:", error);
     }
@@ -143,7 +144,6 @@ const Call = () => {
             fontSize="24px"
             fontWeight="bold"
           />
-
           <Input
             label="출발지"
             name="starting_address"
@@ -159,9 +159,8 @@ const Call = () => {
             value={values.destination_address}
             onChange={handleChange}
           />
-          <Button text="경로 찾기" onClick={handleFindRoute} />
-
-          {route && <Map route={route} />}
+          <Button text="택시 호출하기" onClick={handleFindRoute} />
+          {route && <Map route={route} taxi={taxi} />}
           {!route && <Map />} {/* 도착지 입력 전 인하대 고정 지도 표시 */}
           <CancleButton onClick={handleCancel} />
         </Flex>

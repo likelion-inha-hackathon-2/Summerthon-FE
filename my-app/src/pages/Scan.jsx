@@ -9,9 +9,8 @@ import Button from "../components/Button/Button";
 import Typo from "../components/Typo/Typo";
 import Header1 from "../components/Header/Header1";
 import { getAddressToCoordinate, getRoute } from "../apis/kakaoApi";
-import { createTaxi } from "../apis/taxiApi";
+import { getNearbyTaxi } from "../apis/taxiApi"; // 수정된 API를 임포트
 import { useLocation } from "react-router-dom";
-import Taxi from "../components/Taxi/Taxi";
 
 const Scan = () => {
   const [values, setValues] = useState({
@@ -28,10 +27,10 @@ const Scan = () => {
     if (location.state && location.state.address) {
       const { address_name, road_address, latitude, longitude } =
         location.state.address;
-      setValues({
-        ...values,
+      setValues((prevValues) => ({
+        ...prevValues,
         destination_address: road_address,
-      });
+      }));
       setRoute({
         startX: "126.651415033662",
         startY: "37.4482020408321",
@@ -44,10 +43,10 @@ const Scan = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues({
-      ...values,
+    setValues((prevValues) => ({
+      ...prevValues,
       [name]: value,
-    });
+    }));
   };
 
   const handleCancel = () => {
@@ -109,16 +108,19 @@ const Scan = () => {
         polyline,
       });
 
-      const taxiData = {
-        starting_address: values.starting_address,
+      const nearbyTaxi = await getNearbyTaxi({
         destination_address: values.destination_address,
-        latitude: destCoords.documents[0].y,
-        longitude: destCoords.documents[0].x,
-      };
-      const createdTaxi = await createTaxi(taxiData);
-      setTaxi(createdTaxi);
+      });
+
+      if (nearbyTaxi) {
+        setTaxi(nearbyTaxi);
+        console.log("Called Nearby Taxi:", nearbyTaxi);
+      } else {
+        alert("가까운 택시를 찾지 못했습니다.");
+      }
     } catch (error) {
       console.error("Error finding route:", error);
+      alert("경로를 찾는 도중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 

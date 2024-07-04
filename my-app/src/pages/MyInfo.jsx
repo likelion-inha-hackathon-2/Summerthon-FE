@@ -7,7 +7,7 @@ import Flex from "../components/Flex/Flex";
 import authApi from "../apis/authApi";
 import AddButton from "../components/Button/AddButton";
 import Header2 from "../components/Header/Header2";
-import AddInfoModal from "../components/AddInfoModal/AddInfoModal";
+import AddInfoModal from "../components/Modal/AddInfoModal";
 import useForm from "../hooks/useForm";
 
 const InfoForm = styled.div`
@@ -75,17 +75,11 @@ function MyInfo() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([1]);
-  const [newPageData, setNewPageData] = useState({
-    protector: [],
-    address: [],
-  });
+  const [newPageData, setNewPageData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const { values, handleChange, setValue } = useForm({
-    protector_name: "",
-    protector_email: "",
     address_name: "",
     road_address: "",
     detail_address: "",
@@ -118,41 +112,27 @@ function MyInfo() {
     setCurrentPage(pageNumber);
   };
 
-  const handleAddPage = (type) => {
-    setModalType(type);
+  const handleAddPage = () => {
     setIsModalOpen(true);
   };
 
   const handleSubmit = async () => {
-    const pageData =
-      modalType === "protector"
-        ? {
-            protector_name: values.protector_name,
-            protector_email: values.protector_email,
-          }
-        : {
-            address_name: values.address_name,
-            road_address: values.road_address,
-            detail_address: values.detail_address,
-          };
+    const pageData = {
+      address_name: values.address_name,
+      road_address: values.road_address,
+      detail_address: values.detail_address,
+    };
 
     try {
-      const endpoint =
-        modalType === "protector" ? "/new/protectors" : "/new/addresses";
-      const response = await authApi.post(endpoint, pageData);
-      if (response.status === 201) {
+      const response = await authApi.post("/new/addresses", pageData);
+      if (response.status === 202) {
         alert("정보가 성공적으로 등록되었습니다.");
         setIsModalOpen(false);
         setErrorMessage("");
-        setNewPageData((prevData) => ({
-          ...prevData,
-          [modalType]: [...prevData[modalType], pageData],
-        }));
+        setNewPageData((prevData) => [...prevData, pageData]);
         const newPageNumber = pages.length + 1;
         setPages([...pages, newPageNumber]);
         setCurrentPage(newPageNumber);
-        setValue("protector_name", "");
-        setValue("protector_email", "");
         setValue("address_name", "");
         setValue("road_address", "");
         setValue("detail_address", "");
@@ -223,61 +203,39 @@ function MyInfo() {
           </InputWrapper>
         </InfoForm>
       );
-    } else if (pageNumber === 2) {
-      return newPageData.protector.map((protector, index) => (
-        <InfoForm key={index}>
+    } else {
+      const address = newPageData[pageNumber - 2];
+      return (
+        <InfoForm>
           <InputWrapper>
-            <Label htmlFor={`protector_name_${index}`}>보호자 이름</Label>
+            <Label htmlFor={`address_name_${pageNumber}`}>주소지 이름</Label>
             <InputField
               type="text"
-              id={`protector_name_${index}`}
-              value={protector.protector_name}
-              readOnly
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <Label htmlFor={`protector_email_${index}`}>보호자 이메일</Label>
-            <InputField
-              type="text"
-              id={`protector_email_${index}`}
-              value={protector.protector_email}
-              readOnly
-            />
-          </InputWrapper>
-        </InfoForm>
-      ));
-    } else if (pageNumber === 3) {
-      return newPageData.address.map((address, index) => (
-        <InfoForm key={index}>
-          <InputWrapper>
-            <Label htmlFor={`address_name_${index}`}>주소지 이름</Label>
-            <InputField
-              type="text"
-              id={`address_name_${index}`}
+              id={`address_name_${pageNumber}`}
               value={address.address_name}
               readOnly
             />
           </InputWrapper>
           <InputWrapper>
-            <Label htmlFor={`road_address_${index}`}>도로명 주소</Label>
+            <Label htmlFor={`road_address_${pageNumber}`}>도로명 주소</Label>
             <InputField
               type="text"
-              id={`road_address_${index}`}
+              id={`road_address_${pageNumber}`}
               value={address.road_address}
               readOnly
             />
           </InputWrapper>
           <InputWrapper>
-            <Label htmlFor={`detail_address_${index}`}>상세 주소</Label>
+            <Label htmlFor={`detail_address_${pageNumber}`}>상세 주소</Label>
             <InputField
               type="text"
-              id={`detail_address_${index}`}
+              id={`detail_address_${pageNumber}`}
               value={address.detail_address}
               readOnly
             />
           </InputWrapper>
         </InfoForm>
-      ));
+      );
     }
   };
 
@@ -305,12 +263,8 @@ function MyInfo() {
         </NumForm>
         <Flex direction="row">
           <AddButton
-            text="보호자 추가"
-            onClick={() => handleAddPage("protector")}
-          />
-          <AddButton
             text="주소지 추가"
-            onClick={() => handleAddPage("address")}
+            onClick={handleAddPage}
           />
         </Flex>
       </Flex>
@@ -318,7 +272,6 @@ function MyInfo() {
         isModalOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleSubmit}
-        modalType={modalType}
         newPageData={values}
         handleInputChange={handleChange}
         errorMessage={errorMessage}
