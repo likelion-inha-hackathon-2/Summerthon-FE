@@ -15,7 +15,7 @@ const InfoForm = styled.div`
   flex-direction: column;
   width: 100%;
   padding: 0 10px;
-  margin: 30px 0; //
+  margin: 30px 0;
 
   text-align: left;
 `;
@@ -34,14 +34,14 @@ function MyInfo() {
   });
 
   const [newData, setNewData] = useState(() => {
-    const savedData = localStorage.getItem("newData"); // 로컬 스토리지 설정
+    const savedData = localStorage.getItem("newData");
     return savedData ? JSON.parse(savedData) : [];
   });
 
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isProtectorModalOpen, setIsProtectorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // 추가 정보를 보기 위한 navigate 추가
+  const navigate = useNavigate();
 
   const { values, handleChange } = useForm({
     address_name: "",
@@ -51,7 +51,6 @@ function MyInfo() {
     protector_email: "",
   });
 
-  // 내 정보를 받아오기
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -75,7 +74,6 @@ function MyInfo() {
     fetchUserInfo();
   }, []);
 
-  // 새로운 추가 등록이 있다면 로컬 스토리지에 업데이트
   useEffect(() => {
     localStorage.setItem("newData", JSON.stringify(newData));
   }, [newData]);
@@ -88,7 +86,6 @@ function MyInfo() {
     setIsProtectorModalOpen(true);
   };
 
-  // 주소지 추가 등록 처리
   const handleSubmitAddress = async () => {
     const pageData = {
       address_name: values.address_name,
@@ -99,14 +96,13 @@ function MyInfo() {
     try {
       const response = await authApi.post("/new/addresses", pageData, {
         headers: {
-          // json 형식으로 수정
           "Content-Type": "application/json",
         },
       });
       if (response.status === 200) {
         alert("주소지가 성공적으로 등록되었습니다.");
         setNewData((prevData) => [...prevData, pageData]);
-        setIsAddressModalOpen(false); // 모달 닫기
+        setIsAddressModalOpen(false);
       }
     } catch (error) {
       console.error("Failed to submit new address", error);
@@ -120,7 +116,6 @@ function MyInfo() {
     }
   };
 
-  // 보호자 추가 등록 처리
   const handleSubmitProtector = async () => {
     const pageData = {
       protector_name: values.protector_name,
@@ -136,7 +131,7 @@ function MyInfo() {
       if (response.status === 200) {
         alert("보호자가 성공적으로 등록되었습니다.");
         setNewData((prevData) => [...prevData, pageData]);
-        setIsProtectorModalOpen(false); // 모달 닫기
+        setIsProtectorModalOpen(false);
       }
     } catch (error) {
       console.error("Failed to submit new protector", error);
@@ -174,24 +169,18 @@ function MyInfo() {
           <AddButton text="주소지 추가 등록" onClick={handleAddAddress} />
           <AddButton text="보호자 추가 등록" onClick={handleAddProtector} />
         </Flex>
-        <AddButton
-          text="추가 등록한 정보 보기"
-        
-          onClick={handleMoreInfo}
-        />
+        <AddButton text="추가 등록한 정보 보기" onClick={handleMoreInfo} />
       </Flex>
-      {/* 주소지 추가 모달 열기 */}
       <AddAddressModal
-        isModalOpen={isAddressModalOpen}
+        data-isopen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
         onConfirm={handleSubmitAddress}
         newPageData={values}
         handleInputChange={handleChange}
         errorMessage={errorMessage}
       />
-      {/* 보호자 추가 모달 열기 */}
       <AddProtectorModal
-        isModalOpen={isProtectorModalOpen}
+        data-isopen={isProtectorModalOpen}
         onClose={() => setIsProtectorModalOpen(false)}
         onConfirm={handleSubmitProtector}
         newPageData={values}
