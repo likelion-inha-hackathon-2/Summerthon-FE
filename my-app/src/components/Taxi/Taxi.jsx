@@ -84,7 +84,7 @@ const Taxi = () => {
             <Typo text={`택시 번호: ${taxi.license_number}`} />
             <Typo text={`기사님 이름: ${taxi.driver_name}`} />
             <Typo text={`기사님 전화번호: ${taxi.driver_phone}`} />
-            <Typo text={`예상 소요 시간: ${duration} 분`} />
+            <Typo text={`택시 도착 예정 시간: ${duration} 분 후`} />
             <Typo text={`예상 요금: ${fair} 원`} />
           </TaxiInfo>
         )}
