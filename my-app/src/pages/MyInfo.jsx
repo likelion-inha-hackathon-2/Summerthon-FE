@@ -172,7 +172,7 @@ function MyInfo() {
         <AddButton text="추가 등록한 정보 보기" onClick={handleMoreInfo} />
       </Flex>
       <AddAddressModal
-        data-isopen={isAddressModalOpen}
+        isModalOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
         onConfirm={handleSubmitAddress}
         newPageData={values}
@@ -180,7 +180,7 @@ function MyInfo() {
         errorMessage={errorMessage}
       />
       <AddProtectorModal
-        data-isopen={isProtectorModalOpen}
+        isModalOpen={isProtectorModalOpen}
         onClose={() => setIsProtectorModalOpen(false)}
         onConfirm={handleSubmitProtector}
         newPageData={values}
