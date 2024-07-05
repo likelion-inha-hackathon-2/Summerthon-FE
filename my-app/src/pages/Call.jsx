@@ -42,7 +42,7 @@ const Call = () => {
   const [fair, setFair] = useState(null);
 
   const findRoute = useCallback(
-    async (endX, endY) => {
+    async (endX, endY, destination_address) => {
       const startX = "126.651415033662";
       const startY = "37.4482020408321";
       try {
@@ -68,13 +68,14 @@ const Call = () => {
           });
 
           const nearbyTaxi = await getNearbyTaxi({
-            destination_address: values.starting_address,
+            destination_address: destination_address,
           });
 
           if (nearbyTaxi.taxi && nearbyTaxi.taxi.length > 0) {
             const nearestTaxi = nearbyTaxi.taxi[0];
             setTaxi(nearestTaxi);
             setDuration(Math.ceil(nearbyTaxi.duration / 60));
+            console.log("setFail to", nearbyTaxi.fair);
             setFair(nearbyTaxi.fair);
           } else {
             console.error("No nearby taxi found", nearbyTaxi);
@@ -119,7 +120,7 @@ const Call = () => {
   };
 
   const handleFindRoute = async () => {
-    const { destination_address } = values;
+    const destination_address = values.destination_address;
     if (!destination_address) {
       alert("도착지를 입력하세요.");
       return;
@@ -136,7 +137,7 @@ const Call = () => {
 
       const { x: endX, y: endY } = destCoords.documents[0];
 
-      findRoute(endX, endY);
+      findRoute(endX, endY, destination_address);
     } catch (error) {
       console.error("Error finding route:", error);
     }

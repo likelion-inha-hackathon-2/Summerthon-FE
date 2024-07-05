@@ -65,7 +65,7 @@ const Scan = () => {
   const [destinationName, setDestinationName] = useState("");
 
   const findRoute = useCallback(
-    async (endX, endY) => {
+    async (endX, endY, destination_address) => {
       const startX = "126.651415033662";
       const startY = "37.4482020408321";
       try {
@@ -91,7 +91,7 @@ const Scan = () => {
           });
 
           const nearbyTaxi = await getNearbyTaxi({
-            destination_address: values.starting_address,
+            destination_address: destination_address,
           });
           if (nearbyTaxi.taxi && nearbyTaxi.taxi.length > 0) {
             const nearestTaxi = nearbyTaxi.taxi[0];
@@ -123,7 +123,7 @@ const Scan = () => {
         destination_address: road_address,
       }));
       setDestinationName(address_name);
-      findRoute(longitude, latitude);
+      findRoute(longitude, latitude, road_address);
     }
   }, [location.state, findRoute]);
 
@@ -180,8 +180,7 @@ const Scan = () => {
             <Flex
               direction="column"
               align="center"
-              style={{ marginTop: "20px" }}
-            >
+              style={{ marginTop: "20px" }}>
               <CancleButton onClick={handleCancel} />
             </Flex>
           </Flex>
