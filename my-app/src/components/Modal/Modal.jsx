@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const Dialog = ({ isDialog, onClose, onConfirm }) => {
   return (
-    <StyledDialog isOpen={isDialog}>
+    <StyledDialog data-isopen={isDialog}>
       <DialogContent>
         정말로 취소하시겠습니까?
         <ButtonWrapper>
@@ -16,10 +16,8 @@ const Dialog = ({ isDialog, onClose, onConfirm }) => {
 };
 
 // 'isOpen' 오류 해결
-const StyledDialog = styled.div.attrs(props => ({
-  'aria-hidden': !props.isOpen,
-}))`
-  display: ${(props) => (props.isOpen ? "flex" : "none")};
+const StyledDialog = styled.div`
+  display: ${(props) => (props['data-isopen'] ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   position: fixed;
