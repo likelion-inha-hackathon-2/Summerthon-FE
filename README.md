@@ -42,83 +42,87 @@ npm i
 npm run start
 ```
 
-## 폴더구조
+## 폴더 아키텍처 구조
 ```
-Summerthon-FE
-├─ my-app
-│ ├─ .env
-│ ├─ package-lock.json
-│ ├─ package.json
-│ ├─ public
-│ │ ├─ favicon.ico
-│ │ └─ index.html
-│ ├─ README.md
-│ ├─ src
-│ │ ├─ apis
-│ │ │ ├─ authApi.js
-│ │ │ ├─ emailApi.js
-│ │ │ ├─ kakaoApi.js
-│ │ │ └─ taxiApi.js
-│ │ ├─ App.css
-│ │ ├─ App.jsx
-│ │ ├─ assets
-│ │ │ ├─ icons
-│ │ │ │ └─ arrow.png
-│ │ │ ├─ image.js
-│ │ │ └─ images
-│ │ │ ├─ button-call.png
-│ │ │ ├─ button-cancel.png
-│ │ │ ├─ button-emer.png
-│ │ │ ├─ button-scan.png
-│ │ │ ├─ logo.png
-│ │ │ ├─ taxi.png
-│ │ │ └─ user.png
-│ │ ├─ components
-│ │ │ ├─ Button
-│ │ │ │ ├─ AddButton.jsx
-│ │ │ │ ├─ Button.jsx
-│ │ │ │ └─ CancleButton.jsx
-│ │ │ ├─ Container
-│ │ │ │ └─ Container.jsx
-│ │ │ ├─ Flex
-│ │ │ │ └─ Flex.jsx
-│ │ │ ├─ Header
-│ │ │ │ ├─ Header1.jsx
-│ │ │ │ └─ Header2.jsx
-│ │ │ ├─ Image
-│ │ │ │ └─ Image.jsx
-│ │ │ ├─ Input
-│ │ │ │ └─ Input.jsx
-│ │ │ ├─ Layout
-│ │ │ │ └─ Layout.jsx
-│ │ │ ├─ Map
-│ │ │ │ └─ Map.jsx
-│ │ │ ├─ Modal
-│ │ │ │ ├─ AddAddressModal.jsx
-│ │ │ │ ├─ AddProtectorModal.jsx
-│ │ │ │ └─ Modal.jsx
-│ │ │ ├─ Radio
-│ │ │ │ └─ Radio.jsx
-│ │ │ ├─ Taxi
-│ │ │ │ └─ Taxi.jsx
-│ │ │ └─ Typo
-│ │ │ └─ Typo.jsx
-│ │ ├─ index.css
-│ │ ├─ index.js
-│ │ └─ pages
-│ │ ├─ ArriveLocation.jsx
-│ │ ├─ Call.jsx
-│ │ ├─ EmerCall.jsx
-│ │ ├─ Home.jsx
-│ │ ├─ Login.jsx
-│ │ ├─ Main.jsx
-│ │ ├─ MoreMyInfo.jsx
-│ │ ├─ MyInfo.jsx
-│ │ ├─ Scan.jsx
-│ │ └─ SignUp.jsx
-│ └─ webpack.config.js
-└─ README.md
-
+📦 
+├─ .github
+│  ├─ ISSUE_TEMPLATE
+│  │  └─ 💡-feat-issue.md
+│  └─ pull_request_template.md
+├─ README.md
+└─ my-app
+   ├─ .gitignore
+   ├─ README.md
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ public
+   │  ├─ favicon.ico
+   │  └─ index.html
+   ├─ src
+   │  ├─ App.css
+   │  ├─ App.jsx
+   │  ├─ apis
+   │  │  ├─ authApi.js
+   │  │  ├─ emailApi.js
+   │  │  ├─ kakaoApi.js
+   │  │  └─ taxiApi.js
+   │  ├─ assets
+   │  │  ├─ icons
+   │  │  │  └─ arrow.png
+   │  │  ├─ image.js
+   │  │  └─ images
+   │  │     ├─ button-call.png
+   │  │     ├─ button-cancel.png
+   │  │     ├─ button-emer.png
+   │  │     ├─ button-scan.png
+   │  │     ├─ logo.png
+   │  │     ├─ taxi.png
+   │  │     └─ user.png
+   │  ├─ components
+   │  │  ├─ Button
+   │  │  │  ├─ AddButton.jsx
+   │  │  │  ├─ Button.jsx
+   │  │  │  └─ CancleButton.jsx
+   │  │  ├─ Container
+   │  │  │  └─ Container.jsx
+   │  │  ├─ Flex
+   │  │  │  └─ Flex.jsx
+   │  │  ├─ Header
+   │  │  │  ├─ Header1.jsx
+   │  │  │  └─ Header2.jsx
+   │  │  ├─ Image
+   │  │  │  └─ Image.jsx
+   │  │  ├─ Input
+   │  │  │  └─ Input.jsx
+   │  │  ├─ Layout
+   │  │  │  └─ Layout.jsx
+   │  │  ├─ Map
+   │  │  │  └─ Map.jsx
+   │  │  ├─ Modal
+   │  │  │  ├─ AddAddressModal.jsx
+   │  │  │  ├─ AddProtectorModal.jsx
+   │  │  │  └─ Modal.jsx
+   │  │  ├─ Radio
+   │  │  │  └─ Radio.jsx
+   │  │  ├─ Taxi
+   │  │  │  └─ Taxi.jsx
+   │  │  └─ Typo
+   │  │     └─ Typo.jsx
+   │  ├─ hooks
+   │  │  └─ useForm.jsx
+   │  ├─ index.css
+   │  ├─ index.js
+   │  └─ pages
+   │     ├─ ArriveLocation.jsx
+   │     ├─ Call.jsx
+   │     ├─ EmerCall.jsx
+   │     ├─ Home.jsx
+   │     ├─ Login.jsx
+   │     ├─ Main.jsx
+   │     ├─ MoreMyInfo.jsx
+   │     ├─ MyInfo.jsx
+   │     ├─ Scan.jsx
+   │     └─ SignUp.jsx
+   └─ webpack.config.js
 ```
-
-```
+©generated by [Project Tree Generator](https://woochanleee.github.io/project-tree-generator)
